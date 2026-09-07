@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, RefreshCw, Info, Home, Banknote, TrendingUp, Newspaper, AlertCircle } from "lucide-react";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { calculatePivotLevels, determineSignal } from "@/lib/calculate-pivot";
 
 export const revalidate = 0;
@@ -39,6 +39,8 @@ export default async function AutomaticPivotPage() {
   let queryErrorMsg = "";
 
   try {
+    const supabaseAdmin = getSupabaseAdmin();
+
     const { data, error } = await supabaseAdmin
       .from("ohlc_data")
       .select("*")
