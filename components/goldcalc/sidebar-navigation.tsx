@@ -1,31 +1,14 @@
 'use client'
 
-import {
-  Activity,
-  BarChart3,
-  Calculator,
-  Clock3,
-  Gem,
-  LayoutDashboard,
-  Newspaper,
-  Settings2,
-  TrendingUp,
-} from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { Home, Banknote, TrendingUp, Newspaper, History, BarChart2 } from 'lucide-react'
 
-export type Page = 'home' | 'market' | 'news' | 'history' | 'gold' | 'pivot' | 'dashboard'
+export type Page = 'home' | 'gold' | 'pivot' | 'news' | 'market' | 'history' | 'dashboard'
 
-const mainNav = [
-  { id: 'home' as Page, label: 'Home', icon: LayoutDashboard },
-  { id: 'market' as Page, label: 'Market', icon: Activity },
-  { id: 'news' as Page, label: 'News', icon: Newspaper },
-  { id: 'history' as Page, label: 'History', icon: Clock3 },
-]
-
-const toolNav = [
-  { id: 'gold' as Page, label: 'Gold Calculator', icon: Calculator },
-  { id: 'pivot' as Page, label: 'Pivot Point', icon: BarChart3 },
-  { id: 'dashboard' as Page, label: 'Executive Dashboard', icon: TrendingUp },
+const navItems = [
+  { id: 'home' as Page, label: 'HOME', icon: Home },
+  { id: 'gold' as Page, label: 'GOLD', icon: Banknote },
+  { id: 'pivot' as Page, label: 'PIVOT', icon: TrendingUp },
+  { id: 'news' as Page, label: 'NEWS', icon: Newspaper },
 ]
 
 interface SidebarNavigationProps {
@@ -35,89 +18,63 @@ interface SidebarNavigationProps {
 
 export function SidebarNavigation({ page, setPage }: SidebarNavigationProps) {
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
-      {/* Brand */}
-      <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-6">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-gold text-gold-foreground">
-          <Gem className="size-4" />
-        </div>
-        <div>
-          <div className="text-sm font-semibold tracking-tight text-sidebar-foreground">
-            GoldCalc
-          </div>
-          <div className="text-[10px] font-medium uppercase tracking-[0.15em] text-sidebar-foreground/50">
-            Market Intelligence
-          </div>
+    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
+      {/* Brand Header */}
+      <div className="flex h-16 items-center border-b border-slate-200 px-6">
+        <div className="flex items-center gap-2 text-2xl font-bold tracking-tight">
+          <svg className="h-6 w-6 text-[#0292e3]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
+          </svg>
+          <span className="text-[#0292e3] font-extrabold tracking-tight">Auva</span>
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex flex-1 flex-col gap-8 px-3 py-6">
-        {/* Workspace */}
-        <div>
-          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-sidebar-foreground/40">
-            Workspace
+      {/* Nav List */}
+      <div className="flex flex-1 flex-col justify-between p-4">
+        <nav className="flex flex-col gap-1.5">
+          <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Main Navigation
           </p>
-          <nav className="flex flex-col gap-0.5">
-            {mainNav.map((item) => (
+          {navItems.map((item) => {
+            const isActive = item.id === page || (page === 'market' && item.id === 'home') || (page === 'dashboard' && item.id === 'home')
+            const Icon = item.icon
+            return (
               <button
                 key={item.id}
                 onClick={() => setPage(item.id)}
-                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${
-                  page === item.id
-                    ? 'bg-gold/15 font-medium text-gold'
-                    : 'text-sidebar-foreground/70 hover:bg-sidebar-foreground/5 hover:text-sidebar-foreground'
+                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-xs font-bold tracking-wide transition-all ${
+                  isActive
+                    ? 'bg-[#e6f4fe] text-[#0292e3]'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <item.icon className="size-[17px]" />
+                <Icon className={`h-4 w-4 ${isActive ? 'text-[#0292e3]' : 'text-slate-400'}`} />
                 {item.label}
-                {item.id === 'news' && (
-                  <Badge className="ml-auto h-4 bg-gold/20 px-1.5 text-[10px] text-gold">
-                    6
-                  </Badge>
-                )}
               </button>
-            ))}
-          </nav>
-        </div>
+            )
+          })}
 
-        {/* Tools */}
-        <div>
-          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-sidebar-foreground/40">
-            Tools
+          <div className="my-3 border-t border-slate-100" />
+
+          <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Additional Views
           </p>
-          <nav className="flex flex-col gap-0.5">
-            {toolNav.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setPage(item.id)}
-                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${
-                  page === item.id
-                    ? 'bg-gold/15 font-medium text-gold'
-                    : 'text-sidebar-foreground/70 hover:bg-sidebar-foreground/5 hover:text-sidebar-foreground'
-                }`}
-              >
-                <item.icon className="size-[17px]" />
-                {item.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
+          <button
+            onClick={() => setPage('history')}
+            className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-xs font-bold tracking-wide transition-all ${
+              page === 'history'
+                ? 'bg-[#e6f4fe] text-[#0292e3]'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            }`}
+          >
+            <History className="h-4 w-4 text-slate-400" />
+            HISTORY
+          </button>
+        </nav>
 
-      {/* Footer */}
-      <div className="border-t border-sidebar-border p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex size-7 items-center justify-center rounded-full bg-sidebar-foreground/10 text-[10px] font-semibold text-sidebar-foreground/70">
-            M
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-xs font-medium text-sidebar-foreground/80">
-              MVP Workspace
-            </div>
-            <div className="text-[10px] text-sidebar-foreground/40">Local session</div>
-          </div>
-          <Settings2 className="size-3.5 text-sidebar-foreground/30" />
+        {/* Footer */}
+        <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3 text-center text-xs font-medium text-slate-500">
+          Auva Gold Calculator v2.0
         </div>
       </div>
     </aside>

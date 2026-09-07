@@ -1,10 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ChevronRight, Gem, PanelLeft } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { ChevronRight } from 'lucide-react'
+import { AppHeader } from '@/components/goldcalc/app-header'
 import { SidebarNavigation, type Page } from '@/components/goldcalc/sidebar-navigation'
 import { BottomNavigation } from '@/components/goldcalc/bottom-navigation'
 import { HomePage } from '@/components/pages/home-page'
@@ -66,56 +64,69 @@ export default function GoldCalcApp() {
             setPivotItems={setPivotItems}
           />
         )
+      default:
+        return <HomePage setPage={setPage} showNews={setSelectedNews} />
     }
   })()
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Desktop Sidebar */}
+    <div className="min-h-screen bg-[#f4f7fb] text-slate-900 font-sans antialiased">
+      {/* Desktop Sidebar Navigation */}
       <SidebarNavigation page={page} setPage={setPage} />
 
-      {/* Mobile Header */}
-      <header className="sticky top-0 z-20 flex h-14 items-center border-b bg-card/95 px-4 backdrop-blur-md lg:hidden">
-        <button className="mr-3" onClick={() => setPage('home')}>
-          <PanelLeft className="size-5 text-muted-foreground" />
-        </button>
-        <div className="flex items-center gap-2 text-sm font-semibold">
-          <div className="flex size-6 items-center justify-center rounded-md bg-gold text-gold-foreground">
-            <Gem className="size-3.5" />
-          </div>
-          GoldCalc
-        </div>
-      </header>
+      {/* Global Header */}
+      <div className="lg:pl-64">
+        <AppHeader />
 
-      {/* Main Content */}
-      <main className="pb-20 lg:ml-64 lg:pb-0">
-        <div className="min-h-screen">{content}</div>
-      </main>
+        {/* Main Content Area */}
+        <main className="min-h-[calc(100vh-4rem)] pb-24 lg:pb-12">
+          {content}
+        </main>
+      </div>
 
-      {/* Mobile Bottom Nav */}
+      {/* Mobile Persistent Bottom Navigation */}
       <BottomNavigation page={page} setPage={setPage} />
 
-      {/* News Dialog (shared across all pages) */}
-      <Dialog open={!!selectedNews} onOpenChange={(open) => !open && setSelectedNews(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <div className="mb-2 flex items-center gap-2">
-              <Badge variant="secondary">{selectedNews?.category}</Badge>
-              <span className="text-xs text-muted-foreground">{selectedNews?.published}</span>
+      {/* News Modal */}
+      {selectedNews && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+            {selectedNews.image && (
+              <img
+                src={selectedNews.image}
+                alt={selectedNews.title}
+                className="h-48 w-full object-cover"
+              />
+            )}
+            <div className="flex flex-col gap-3 p-6 overflow-y-auto">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
+                <span>{selectedNews.source}</span>
+                <span>{selectedNews.published}</span>
+              </div>
+              <h2 className="text-lg font-bold text-slate-900">{selectedNews.title}</h2>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                {selectedNews.summary}
+              </p>
+              <div className="mt-4 flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <button
+                  onClick={() => setSelectedNews(null)}
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                  Close
+                </button>
+                <a
+                  href={selectedNews.url || '#'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1 rounded-xl bg-[#241e52] px-4 py-2 text-xs font-semibold text-white hover:bg-[#1a153e]"
+                >
+                  Read Full Article <ChevronRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </div>
-            <DialogTitle className="text-lg leading-7">{selectedNews?.title}</DialogTitle>
-            <DialogDescription>
-              {selectedNews?.source} · Fundamental market coverage
-            </DialogDescription>
-          </DialogHeader>
-          <p className="text-sm leading-6 text-muted-foreground">{selectedNews?.summary}</p>
-          <Button asChild className="w-fit">
-            <a href="https://example.com" target="_blank" rel="noreferrer">
-              Read Original News <ChevronRight data-icon="inline-end" />
-            </a>
-          </Button>
-        </DialogContent>
-      </Dialog>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

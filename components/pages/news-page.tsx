@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Radio, Newspaper, Sparkles } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { PageHeader } from '@/components/goldcalc/page-header'
+import { ChevronDown, Radio } from 'lucide-react'
 import { NewsCard } from '@/components/goldcalc/news-card'
 import { TradingViewNewsWidget } from '@/components/goldcalc/tradingview-news-widget'
 import { news, categories, type NewsItem } from '@/lib/goldcalc-data'
@@ -12,126 +10,98 @@ interface NewsPageProps {
   showNews: (n: NewsItem) => void
 }
 
-const symbols = [
-  { id: 'OANDA:XAUUSD', label: 'Spot Gold (XAUUSD)' },
-  { id: 'COMEX:GC1!', label: 'Gold Futures (GC1!)' },
-  { id: 'TVC:GOLD', label: 'Global Gold Index' },
-  { id: 'CAPITALCOM:DXY', label: 'US Dollar Index (DXY)' },
-]
-
 export function NewsPage({ showNews }: NewsPageProps) {
-  const [viewMode, setViewMode] = useState<'live' | 'curated'>('live')
-  const [selectedSymbol, setSelectedSymbol] = useState('OANDA:XAUUSD')
-  const [category, setCategory] = useState('All')
+  const [selectedCategory, setSelectedCategory] = useState('All News')
+  const [showLiveStream, setShowLiveStream] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(6)
 
-  const filtered = category === 'All' ? news : news.filter((n) => n.category === category)
+  const filteredNews =
+    selectedCategory === 'All News'
+      ? news
+      : news.filter(
+          (item) =>
+            item.category.toLowerCase() === selectedCategory.toLowerCase() ||
+            (selectedCategory === 'Interest Rates' && item.category === 'Interest Rate') ||
+            (selectedCategory === 'Global Economy' && item.category === 'Economy')
+        )
 
   return (
-    <>
-      <PageHeader
-        eyebrow="Market Intelligence"
-        title="Fundamental News & Real-Time Feed"
-        description="Stay informed with real-time live market news directly from TradingView alongside curated macroeconomic context."
-        action={
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="gap-1.5 py-1.5 text-xs text-positive">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
-                <span className="relative inline-flex size-2 rounded-full bg-positive" />
-              </span>
-              Live Feed Active
-            </Badge>
-          </div>
-        }
-      />
+    <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-6 sm:max-w-xl sm:px-6 lg:max-w-4xl lg:px-8">
+      {/* Title & Subtitle */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+            Gold Fundamental News
+          </h1>
 
-      <div className="flex flex-col gap-6 p-5 sm:p-8 lg:p-10">
-        {/* View mode toggle */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex w-fit rounded-md border bg-muted p-0.5">
-            <button
-              onClick={() => setViewMode('live')}
-              className={`flex items-center gap-2 rounded-[3px] px-4 py-1.5 text-sm transition-colors ${
-                viewMode === 'live'
-                  ? 'bg-card font-medium text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Radio className="size-3.5 text-positive" />
-              Live TradingView Stream
-            </button>
-            <button
-              onClick={() => setViewMode('curated')}
-              className={`flex items-center gap-2 rounded-[3px] px-4 py-1.5 text-sm transition-colors ${
-                viewMode === 'curated'
-                  ? 'bg-card font-medium text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Newspaper className="size-3.5 text-gold" />
-              Curated Summaries ({news.length})
-            </button>
-          </div>
+          <button
+            onClick={() => setShowLiveStream(!showLiveStream)}
+            className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm hover:border-[#0292e3]"
+          >
+            <Radio className="h-3.5 w-3.5 text-[#0292e3]" />
+            {showLiveStream ? 'Show Card View' : 'TradingView Feed'}
+          </button>
+        </div>
+        <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+          Stay informed with important news related to gold and global financial markets.
+        </p>
+      </div>
 
-          {viewMode === 'live' && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-              <span className="text-xs font-medium text-muted-foreground">Symbol:</span>
-              {symbols.map((s) => (
+      {showLiveStream ? (
+        /* TradingView News Stream Container */
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <TradingViewNewsWidget symbol="OANDA:XAUUSD" height={650} />
+        </div>
+      ) : (
+        /* Curated News Stream Layout matching Screenshot 2 */
+        <div className="flex flex-col gap-6">
+          {/* Categories Pill Buttons */}
+          <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1">
+            {categories.map((cat) => {
+              const isActive = selectedCategory === cat
+              return (
                 <button
-                  key={s.id}
-                  onClick={() => setSelectedSymbol(s.id)}
-                  className={`whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                    selectedSymbol === s.id
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'bg-card text-muted-foreground hover:border-gold/40 hover:text-foreground'
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+                    isActive
+                      ? 'border border-slate-900 bg-slate-900 text-white shadow-sm'
+                      : 'border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
-                  {s.label}
+                  {cat}
                 </button>
+              )
+            })}
+          </div>
+
+          {/* Vertical Stack / Grid of News Cards */}
+          {filteredNews.length > 0 ? (
+            <div className="flex flex-col gap-5 sm:grid sm:grid-cols-2">
+              {filteredNews.slice(0, visibleCount).map((item) => (
+                <NewsCard key={item.id} item={item} onClick={() => showNews(item)} />
               ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-xs text-slate-500">
+              No news items available for this category.
+            </div>
+          )}
+
+          {/* Load More Button */}
+          {visibleCount < filteredNews.length && (
+            <div className="mt-2 flex justify-center">
+              <button
+                onClick={() => setVisibleCount((prev) => prev + 3)}
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50"
+              >
+                <span>Load More News</span>
+                <ChevronDown className="h-4 w-4 text-slate-500" />
+              </button>
             </div>
           )}
         </div>
-
-        {/* Live TradingView Section */}
-        {viewMode === 'live' ? (
-          <div className="flex flex-col gap-4">
-            <TradingViewNewsWidget symbol={selectedSymbol} height={700} />
-          </div>
-        ) : (
-          /* Curated News Grid */
-          <div className="flex flex-col gap-6">
-            {/* Category filter */}
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              {categories.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCategory(c)}
-                  className={`whitespace-nowrap rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
-                    category === c
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'bg-card text-muted-foreground hover:border-gold/40 hover:text-foreground'
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-
-            {filtered.length ? (
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {filtered.map((item) => (
-                  <NewsCard key={item.id} item={item} onClick={() => showNews(item)} />
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-lg border border-dashed p-12 text-center text-sm text-muted-foreground">
-                No stories in this category.
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </>
+      )}
+    </div>
   )
 }
