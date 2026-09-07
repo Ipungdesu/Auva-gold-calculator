@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scrapeLatestGoldOhlc } from "@/lib/scrape-ohlc";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export async function GET(req: NextRequest) {
   // Authorization Check
@@ -10,6 +10,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    // Inisialisasi Supabase Admin Client secara lazy/runtime
+    const supabaseAdmin = getSupabaseAdmin();
+
     // 1. Scrape latest OHLC from Newsmaker
     const row = await scrapeLatestGoldOhlc();
 
