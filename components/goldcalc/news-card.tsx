@@ -1,34 +1,58 @@
-import { ChevronRight } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+'use client'
+
+import React from 'react'
+import { ArrowRight } from 'lucide-react'
 import type { NewsItem } from '@/lib/goldcalc-data'
 
 interface NewsCardProps {
   item: NewsItem
-  onClick: () => void
+  onClick?: () => void
 }
 
 export function NewsCard({ item, onClick }: NewsCardProps) {
   return (
-    <button
+    <article
       onClick={onClick}
-      className="group flex w-full flex-col gap-3 rounded-lg border bg-card p-4 text-left transition-colors hover:border-gold/40 hover:shadow-sm"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md cursor-pointer"
     >
-      <div className="flex items-center gap-2">
-        <Badge variant="secondary" className="font-normal">
-          {item.category}
-        </Badge>
-        <span className="text-[11px] text-muted-foreground">{item.published}</span>
+      {/* Image */}
+      {item.image && (
+        <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
+          <img
+            src={item.image}
+            alt={item.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        </div>
+      )}
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col justify-between p-5">
+        <div className="flex flex-col gap-2">
+          {/* Source & Date */}
+          <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
+            <span>{item.source}</span>
+            <span>{item.published}</span>
+          </div>
+
+          {/* Title */}
+          <h3 className="text-base font-bold text-slate-900 leading-snug tracking-tight group-hover:text-[#0292e3] transition-colors">
+            {item.title}
+          </h3>
+
+          {/* Summary */}
+          <p className="line-clamp-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            {item.summary}
+          </p>
+        </div>
+
+        {/* Read More Link */}
+        <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[#241e52] group-hover:text-[#0292e3]">
+          <span>Read More</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </div>
       </div>
-      <div className="text-sm font-medium leading-5 text-foreground group-hover:text-primary">
-        {item.title}
-      </div>
-      <div className="line-clamp-2 text-[13px] leading-5 text-muted-foreground">
-        {item.summary}
-      </div>
-      <div className="flex items-center justify-between pt-1 text-[11px] text-muted-foreground">
-        <span>{item.source}</span>
-        <ChevronRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-      </div>
-    </button>
+    </article>
   )
 }

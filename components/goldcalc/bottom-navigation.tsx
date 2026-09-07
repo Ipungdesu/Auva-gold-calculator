@@ -1,13 +1,13 @@
 'use client'
 
-import { Activity, Clock3, LayoutDashboard, Newspaper } from 'lucide-react'
+import { Home, Banknote, TrendingUp, Newspaper } from 'lucide-react'
 import type { Page } from '@/components/goldcalc/sidebar-navigation'
 
 const items = [
-  { id: 'home' as Page, label: 'Home', icon: LayoutDashboard },
-  { id: 'market' as Page, label: 'Market', icon: Activity },
-  { id: 'news' as Page, label: 'News', icon: Newspaper },
-  { id: 'history' as Page, label: 'History', icon: Clock3 },
+  { id: 'home' as Page, label: 'HOME', icon: Home },
+  { id: 'gold' as Page, label: 'GOLD', icon: Banknote },
+  { id: 'pivot' as Page, label: 'PIVOT', icon: TrendingUp },
+  { id: 'news' as Page, label: 'NEWS', icon: Newspaper },
 ]
 
 interface BottomNavigationProps {
@@ -17,24 +17,23 @@ interface BottomNavigationProps {
 
 export function BottomNavigation({ page, setPage }: BottomNavigationProps) {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 flex h-16 items-center justify-around border-t border-border bg-card/95 px-2 backdrop-blur-md lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-slate-200 bg-white/95 px-2 backdrop-blur-md">
       {items.map((item) => {
         const isActive = item.id === page
+        const Icon = item.icon
+
         return (
           <button
             key={item.id}
             onClick={() => setPage(item.id)}
-            className={`flex min-w-[4rem] flex-col items-center gap-1 rounded-lg px-3 py-1.5 text-[10px] font-medium transition-colors ${
-              isActive
-                ? 'text-primary'
-                : 'text-muted-foreground hover:text-foreground'
+            className={`flex flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors ${
+              isActive ? 'text-[#0292e3]' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <item.icon className={`size-5 ${isActive ? 'text-gold' : ''}`} />
-            <span>{item.label}</span>
-            {isActive && (
-              <span className="absolute bottom-2.5 h-0.5 w-4 rounded-full bg-gold" />
-            )}
+            <Icon className={`h-5 w-5 ${isActive ? 'text-[#0292e3]' : 'text-slate-400'}`} />
+            <span className={`text-[11px] font-bold tracking-wider ${isActive ? 'text-[#0292e3]' : 'text-slate-400'}`}>
+              {item.label}
+            </span>
           </button>
         )
       })}
