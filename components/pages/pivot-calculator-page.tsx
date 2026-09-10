@@ -26,16 +26,18 @@ interface PivotCalculatorPageProps {
 export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
   const [mode, setMode] = useState<'selection' | 'manual-input' | 'manual-result'>('selection')
 
-  const [vals, setVals] = useState({
-    open: 2735.4,
-    high: 2758.6,
-    low: 2722.1,
-    close: 2748.9,
-  })
+ const [vals, setVals] = useState({
+  open: 2735.4,
+  high: 2758.6,
+  low: 2722.1,
+  close: 2748.9,
+  currentPrice: 2750.0,
+})
 
   const [error, setError] = useState('')
   const [computedLevels, setComputedLevels] = useState<PivotLevels | null>(null)
   const [computedSignal, setComputedSignal] = useState<MarketSignal | null>(null)
+  const [currentPrice, setCurrentPrice] = useState<number | null>(null)
 
   const update = (k: keyof typeof vals, v: string) => {
     setVals((x) => ({ ...x, [k]: parseFloat(v) || 0 }))
@@ -43,42 +45,108 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
   function handleCalculateManual() {
     const { open, high, low, close } = vals
-    if ([open, high, low, close].some((v) => !Number.isFinite(v) || v <= 0)) {
-      return setError('Please enter positive numbers for Open, High, Low, and Close.')
-    }
-    if (high < low) return setError('High cannot be lower than Low.')
-    if (open > high || open < low || close > high || close < low) {
-      return setError('Open and Close values must be between Low and High.')
-    }
-
-    setError('')
-    const levels = calculatePivotLevels({ open, high, low, close })
-    const signal = determineSignal(close, levels)
-
-    setComputedLevels(levels)
-    setComputedSignal(signal)
-    setMode('manual-result')
-
-    if (addPivot) {
-      addPivot({
-        id: crypto.randomUUID(),
-        type: 'Manual',
-        ohlc: { open, high, low, close },
-        result: {
-          p: levels.p,
-          r1: levels.r1,
-          r2: levels.r2,
-          r3: levels.r3,
-          r4: levels.r4,
-          s1: levels.s1,
-          s2: levels.s2,
-          s3: levels.s3,
-          s4: levels.s4,
-        },
-        date: new Date().toISOString(),
-      })
-    }
+   if (
+    [open, high, low, close].some(
+      (v) => !Number.isFinite(v) || v <= 0
+    )
+  ) {
+    return setError(
+      'Please enter positive numbers for Open, High, Low, and Close.'
+    )
   }
+
+  // High tidak boleh lebih rendah dari Low
+  if (high < low) {
+    return setError(
+      'High cannot be lower than Low.'
+    )
+  }
+
+  // Open dan Close kemarin harus berada
+  // di antara High dan Low kemarin
+  if (
+    open > high ||
+    open < low ||
+    close > high ||
+    close < low
+  ) {
+    return setError(
+      'Open and Close values must be between Low and High.'
+    )
+  }
+
+  setError('')
+
+  // ===================================
+  // HITUNG PIVOT
+  // Data OHLC yang diinput = DATA KEMARIN
+  // ===================================
+
+  const levels = calculatePivotLevels({
+    open,
+    high,
+    low,
+    close,
+  })
+
+  
+
+  const openToday = 4000.00
+
+  
+
+  setCurrentPrice(openToday)
+
+ 
+  // ===================================
+
+  const signal = determineSignal(
+    openToday,
+    levels
+  )
+
+  // SIMPAN HASIL PERHITUNGAN
+
+  setComputedLevels(levels)
+  setComputedSignal(signal)
+
+
+  // TAMPILKAN HALAMAN HASIL
+ 
+
+  setMode('manual-result')
+
+  // SIMPAN RIWAYAT PIVOT
+
+  if (addPivot) {
+    addPivot({
+      id: crypto.randomUUID(),
+
+      type: 'Manual',
+
+      ohlc: {
+        open,
+        high,
+        low,
+        close,
+      },
+
+      result: {
+        p: levels.p,
+        r1: levels.r1,
+        r2: levels.r2,
+        r3: levels.r3,
+        r4: levels.r4,
+        s1: levels.s1,
+        s2: levels.s2,
+        s3: levels.s3,
+        s4: levels.s4,
+      },
+
+      date: new Date().toISOString(),
+    })
+  }
+}
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-6 sm:max-w-xl sm:px-6 lg:max-w-4xl lg:px-8">
@@ -310,7 +378,8 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
               <div className="text-right">
                 <span className="text-[10px] font-bold text-slate-400">Current Price</span>
                 <div className="text-lg font-extrabold text-slate-900 font-mono">
-                  {money(vals.close)}
+                   {currentPrice !== null ? money(currentPrice)
+                   : '-'}
                 </div>
               </div>
             </div>
