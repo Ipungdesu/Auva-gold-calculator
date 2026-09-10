@@ -1,4 +1,5 @@
 export interface OHLCData {
+  // Semua data OHLC diinput dari HARI KEMARIN
   open: number
   high: number
   low: number
@@ -20,76 +21,158 @@ export interface PivotLevels {
 export interface MarketSignal {
   bias: 'Bullish Bias' | 'Bearish Bias' | 'Neutral'
   direction: 'BUY' | 'SELL' | 'NEUTRAL'
+
   positionText: string
   targetResistanceText: string
   nearestInvalidationText: string
   conditionText: string
-  activeLevel: 'R4' | 'R3' | 'R2' | 'R1' | 'PP' | 'S1' | 'S2' | 'S3' | 'S4'
-  nextTargetLevel: 'R4' | 'R3' | 'R2' | 'R1' | 'S1' | 'S2' | 'S3' | 'S4' | null
+
+  activeLevel:
+    | 'R4'
+    | 'R3'
+    | 'R2'
+    | 'R1'
+    | 'PP'
+    | 'S1'
+    | 'S2'
+    | 'S3'
+    | 'S4'
+
+  nextTargetLevel:
+    | 'R4'
+    | 'R3'
+    | 'R2'
+    | 'R1'
+    | 'S1'
+    | 'S2'
+    | 'S3'
+    | 'S4'
+    | null
 }
 
-export function calculatePivotLevels(ohlc: OHLCData): PivotLevels {
-  const p = (ohlc.high + ohlc.low + ohlc.close) / 3
-  const r1 = 2 * p - ohlc.low
-  const r2 = p + (ohlc.high - ohlc.low)
-  const r3 = ohlc.high + 2 * (p - ohlc.low)
-  const r4 = r3 + (ohlc.high - ohlc.low)
+/**
+ * Menghitung Pivot Point berdasarkan data OHLC HARI KEMARIN.
+ */
+export function calculatePivotLevels(
+  ohlc: OHLCData
+): PivotLevels {
+  const { high, low, close } = ohlc
 
-  const s1 = 2 * p - ohlc.high
-  const s2 = p - (ohlc.high - ohlc.low)
-  const s3 = ohlc.low - 2 * (ohlc.high - p)
-  const s4 = s3 - (ohlc.high - ohlc.low)
+  // Pivot Point
+  const p = (high + low + close) / 3
 
-  return { p, r1, r2, r3, r4, s1, s2, s3, s4 }
+  // Range harga kemarin
+  const range = high - low
+
+  // Resistance
+  const r1 = (2 * p) - low
+  const r2 = p + range
+  const r3 = p + (range * 2)
+  const r4 = p + (range * 3)
+
+  // Support
+  const s1 = (2 * p) - high
+  const s2 = p - range
+  const s3 = p - (range * 2)
+  const s4 = p - (range * 3)
+
+  return {
+    p,
+    r1,
+    r2,
+    r3,
+    r4,
+    s1,
+    s2,
+    s3,
+    s4,
+  }
 }
 
 const fmt = (n: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(n)
+  new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n)
 
-export function determineSignal(currentPrice: number, levels: PivotLevels): MarketSignal {
-  if (currentPrice >= levels.r1) {
+/**
+ * Menentukan signal berdasarkan:
+ *
+ * Pivot Point vs Open Hari Ini.
+ *
+ * P > Open Hari Ini  = BUY
+ * P < Open Hari Ini  = SELL
+ * P = Open Hari Ini  = NEUTRAL
+ */
+export function determineSignal(
+  openToday: number,
+  levels: PivotLevels
+): MarketSignal {
+
+  // BUY
+  if (levels.p > openToday) {
     return {
       bias: 'Bullish Bias',
       direction: 'BUY',
-      positionText: `Above R1 (${fmt(levels.r1)})`,
-      targetResistanceText: `R2 (${fmt(levels.r2)})`,
-      nearestInvalidationText: `Pivot (${fmt(levels.p)})`,
-      conditionText: `Current gold spot is trading above R1 (${fmt(levels.r1)}). Strong intraday upward bias pointing toward R2 resistance.`,
-      activeLevel: 'R1',
-      nextTargetLevel: 'R2',
-    }
-  } else if (currentPrice >= levels.p) {
-    return {
-      bias: 'Bullish Bias',
-      direction: 'BUY',
-      positionText: `Above Pivot (${fmt(levels.p)})`,
-      targetResistanceText: `R1 (${fmt(levels.r1)})`,
-      nearestInvalidationText: `Pivot (${fmt(levels.p)})`,
-      conditionText: `Current gold spot is trading above Pivot (${fmt(levels.p)}). Upward momentum heading toward R1 resistance.`,
+
+      positionText:
+        `Pivot (${fmt(levels.p)}) is above today's Open (${fmt(openToday)})`,
+
+      targetResistanceText:
+        `R1 (${fmt(levels.r1)})`,
+
+      nearestInvalidationText:
+        `Pivot (${fmt(levels.p)})`,
+
+      conditionText:
+        `Pivot Point is above today's Open price. BUY signal generated.`,
+
       activeLevel: 'PP',
       nextTargetLevel: 'R1',
     }
-  } else if (currentPrice <= levels.s1) {
+  }
+
+  // SELL
+  if (levels.p < openToday) {
     return {
       bias: 'Bearish Bias',
       direction: 'SELL',
-      positionText: `Below S1 (${fmt(levels.s1)})`,
-      targetResistanceText: `S2 (${fmt(levels.s2)})`,
-      nearestInvalidationText: `Pivot (${fmt(levels.p)})`,
-      conditionText: `Current gold spot is trading below S1 (${fmt(levels.s1)}). Downward pressure pointing toward S2 support.`,
-      activeLevel: 'S1',
-      nextTargetLevel: 'S2',
-    }
-  } else {
-    return {
-      bias: 'Bearish Bias',
-      direction: 'SELL',
-      positionText: `Below Pivot (${fmt(levels.p)})`,
-      targetResistanceText: `S1 (${fmt(levels.s1)})`,
-      nearestInvalidationText: `Pivot (${fmt(levels.p)})`,
-      conditionText: `Current gold spot is trading below Pivot (${fmt(levels.p)}). Testing nearest support at S1.`,
+
+      positionText:
+        `Pivot (${fmt(levels.p)}) is below today's Open (${fmt(openToday)})`,
+
+      targetResistanceText:
+        `S1 (${fmt(levels.s1)})`,
+
+      nearestInvalidationText:
+        `Pivot (${fmt(levels.p)})`,
+
+      conditionText:
+        `Pivot Point is below today's Open price. SELL signal generated.`,
+
       activeLevel: 'PP',
       nextTargetLevel: 'S1',
     }
+  }
+
+  // NEUTRAL
+  return {
+    bias: 'Neutral',
+    direction: 'NEUTRAL',
+
+    positionText:
+      `Pivot (${fmt(levels.p)}) is equal to today's Open (${fmt(openToday)})`,
+
+    targetResistanceText: '-',
+
+    nearestInvalidationText: '-',
+
+    conditionText:
+      `Pivot Point is equal to today's Open price. No clear signal.`,
+
+    activeLevel: 'PP',
+    nextTargetLevel: null,
   }
 }
