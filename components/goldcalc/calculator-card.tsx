@@ -10,9 +10,9 @@ interface CalculatorCardProps {
 
 export function CalculatorCard({ addGold }: CalculatorCardProps) {
   const [capital, setCapital] = useState('100000000')
-  const [buyingPrice, setBuyingPrice] = useState('1150000')
-  const [sellingPrice, setSellingPrice] = useState('1180000')
-  const [exchangeRate, setExchangeRate] = useState('15500')
+  const [buyingPrice, setBuyingPrice] = useState('4000')
+  const [sellingPrice, setSellingPrice] = useState('4400')
+  const [exchangeRate, setExchangeRate] = useState('18000')
   const [toz, setToz] = useState('31.103')
 
   const [result, setResult] = useState<{
@@ -32,46 +32,62 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
   })
 
   function calculate() {
-    const cap = parseFloat(capital) || 0
-    const hb = parseFloat(buyingPrice) || 0
-    const hj = parseFloat(sellingPrice) || 0
+  const cap = parseFloat(capital) || 0
+  const hbUsd = parseFloat(buyingPrice) || 0
+  const hjUsd = parseFloat(sellingPrice) || 0
+  const rate = parseFloat(exchangeRate) || 0
+  const ounce = parseFloat(toz) || 0
 
-    if (cap <= 0 || hb <= 0 || hj <= 0) return
-
-    const qty = cap / hb
-    const totalBuy = qty * hb
-    const totalSell = qty * hj
-    const spread = hj - hb
-    const profit = totalSell - totalBuy
-    const profitPct = totalBuy > 0 ? (profit / totalBuy) * 100 : 0
-
-    const res = {
-      quantityGrams: Number(qty.toFixed(2)),
-      totalBuyingPrice: Math.round(totalBuy),
-      totalSellingPrice: Math.round(totalSell),
-      spreadPerGram: Math.round(spread),
-      profit: Math.round(profit),
-      profitPercent: Number(profitPct.toFixed(2)),
-    }
-
-    setResult(res)
-
-    addGold({
-      id: crypto.randomUUID(),
-      capital: cap,
-      buyingPrice: hb,
-      sellingPrice: hj,
-      quantity: res.quantityGrams,
-      profit: res.profit,
-      date: new Date().toISOString(),
-    })
+  if (
+    cap <= 0 ||
+    hbUsd <= 0 ||
+    hjUsd <= 0 ||
+    rate <= 0 ||
+    ounce <= 0
+  ) {
+    return
   }
+
+  // Convert USD/TOZ to IDR/gram
+  const hb = (hbUsd * rate) / ounce
+  const hj = (hjUsd * rate) / ounce
+
+  // Calculate gold quantity based on buying price
+  const qty = cap / hb
+
+  const totalBuy = qty * hb
+  const totalSell = qty * hj
+  const spread = hj - hb
+  const profit = totalSell - totalBuy
+  const profitPct = totalBuy > 0 ? (profit / totalBuy) * 100 : 0
+
+  const res = {
+    quantityGrams: Number(qty.toFixed(2)),
+    totalBuyingPrice: Math.round(totalBuy),
+    totalSellingPrice: Math.round(totalSell),
+    spreadPerGram: Math.round(spread),
+    profit: Math.round(profit),
+    profitPercent: Number(profitPct.toFixed(2)),
+  }
+
+  setResult(res)
+
+  addGold({
+    id: crypto.randomUUID(),
+    capital: cap,
+    buyingPrice: hb,
+    sellingPrice: hj,
+    quantity: res.quantityGrams,
+    profit: res.profit,
+    date: new Date().toISOString(),
+  })
+}
 
   function handleReset() {
     setCapital('100000000')
-    setBuyingPrice('1150000')
-    setSellingPrice('1180000')
-    setExchangeRate('15500')
+    setBuyingPrice('4000')
+    setSellingPrice('4400')
+    setExchangeRate('18000')
     setToz('31.103')
     calculate()
   }
