@@ -53,8 +53,8 @@
   --popover: #ffffff;
   --popover-foreground: #0f172a;
 
-  /* Primary — Deep Navy / Dark Purple (#241e52) */
-  --primary: #241e52;
+  /* Primary — Hang Seng */
+  --primary: #a80038;
   --primary-foreground: #ffffff;
 
   /* Secondary — Soft Slate / Light Gray-Blue */
@@ -65,10 +65,10 @@
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
 
-  /* Accent — Bright Blue (#0292e3) */
-  --accent: #e6f4fe;
-  --accent-foreground: #0292e3;
-  --accent-blue: #0292e3;
+  /* Accent — Hang Seng highlight */
+  --accent: #fff0f4;
+  --accent-foreground: #a80038;
+  --accent-blue: #fd3a69;
 
   /* Gold — Explicit accent token */
   --gold: #d97706;
@@ -80,7 +80,7 @@
   /* Borders & Input */
   --border: #e2e8f0;
   --input: #e2e8f0;
-  --ring: #0292e3;
+  --ring: #fd3a69;
 
   /* Semantic */
   --positive: #10b981;

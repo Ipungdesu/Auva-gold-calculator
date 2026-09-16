@@ -179,9 +179,9 @@ export default async function AutomaticPivotPage() {
               <div
                 className={`mt-1 flex w-fit items-center gap-1.5 rounded-xl px-5 py-2.5 text-base font-extrabold text-white shadow-sm ${
                   signal.direction === "BUY"
-                    ? "bg-gradient-to-r from-[#241e52] to-[#0292e3]"
+                    ? "bg-linear-to-r from-[#241e52] to-[#0292e3]"
                     : signal.direction === "SELL"
-                    ? "bg-gradient-to-r from-rose-700 to-rose-500"
+                    ? "bg-linear-to-r from-rose-700 to-rose-500"
                     : "bg-slate-700"
                 }`}
               >
@@ -235,7 +235,7 @@ export default async function AutomaticPivotPage() {
 
           {/* Horizontally Scrollable Table for All 5 Columns (Date, Open, High, Low, Close) */}
           <div className="mt-4 overflow-x-auto scrollbar-thin">
-            <table className="min-w-[500px] w-full text-left text-xs">
+            <table className="min-w-125 w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   <th className="pb-2.5 font-bold pl-1">DATE</th>
@@ -278,7 +278,9 @@ export default async function AutomaticPivotPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between pb-4">
             <h2 className="text-base font-bold text-slate-900">Calculated Pivot Levels</h2>
-            <span className="text-xs text-slate-400">Standard Floor Pivots</span>
+            <span className="rounded-full bg-linear-to-r from-[#A80038] to-[#FD3A69] px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
+              Standard Floor Pivots
+            </span>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -320,7 +322,7 @@ export default async function AutomaticPivotPage() {
                   R1
                 </span>
                 {signal.activeLevel === "R1" && (
-                  <span className="rounded-md bg-gradient-to-r from-[#241e52] to-[#0292e3] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+                  <span className="rounded-md bg-linear-to-r from-[#241e52] to-[#0292e3] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
                     CURRENT LEVEL
                   </span>
                 )}
@@ -352,7 +354,7 @@ export default async function AutomaticPivotPage() {
             </div>
 
             {/* PP Pivot Point (Solid Navy Bar) */}
-            <div className="flex items-center justify-between rounded-2xl bg-[#232066] px-4 py-3.5 text-white shadow-sm">
+            <div className="flex items-center justify-between rounded-2xl bg-linear-to-r from-[#8f5b00] via-[#c98905] to-[#f0c040] px-4 py-3.5 text-white shadow-sm">
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-sm text-[#0292e3]">PP</span>
                 <span className="font-bold text-xs text-white">Pivot Point</span>
@@ -429,7 +431,7 @@ export default async function AutomaticPivotPage() {
         {/* Action Button */}
         <Link
           href="/pivot"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#241e52] to-[#0292e3] py-3.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#241e52] to-[#0292e3] py-3.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
         >
           <RefreshCw className="h-4 w-4" />
           <span>Recalculate / Change Timeframe</span>

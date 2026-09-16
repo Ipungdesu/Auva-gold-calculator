@@ -156,7 +156,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           <div className="mt-2 grid grid-cols-[1fr_auto] gap-3">
             <button
               onClick={calculate}
-              className="flex items-center justify-center gap-2 rounded-xl bg-[#0292e3] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0282c4] active:scale-[0.99]"
+              className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#A80038] to-[#FD3A69] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
             >
               <Calculator className="h-4 w-4" />
               <span>Calculate</span>
@@ -175,7 +175,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
       {result && (
         <div className="flex flex-col gap-4">
           {/* Gold Quantity */}
-          <div className="relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="relative overflow-hidden rounded-2xl border border-[#c98905]/30 bg-linear-to-br from-[#fff8dc] to-[#f7d774]/45 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#0292e3]">
                 GOLD QUANTITY
@@ -222,7 +222,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           </div>
 
           {/* Potential Profit */}
-          <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50/70 to-blue-100/40 p-5 shadow-sm">
+          <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50/70 to-blue-100/40 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#241e52]">
                 POTENTIAL PROFIT

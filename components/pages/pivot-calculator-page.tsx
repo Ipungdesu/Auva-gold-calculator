@@ -452,7 +452,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
                     R1
                   </span>
                   {computedSignal.activeLevel === 'R1' && (
-                    <span className="rounded-md bg-gradient-to-r from-[#241e52] to-[#0292e3] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+                    <span className="rounded-md bg-linear-to-r from-[#241e52] to-[#0292e3] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
                       CURRENT LEVEL
                     </span>
                   )}
@@ -558,7 +558,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
           {/* New Calculation Button */}
           <button
             onClick={() => setMode('selection')}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#241e52] to-[#0292e3] py-3.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#241e52] to-[#0292e3] py-3.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
           >
             <RefreshCw className="h-4 w-4" />
             <span>New Calculation</span>
