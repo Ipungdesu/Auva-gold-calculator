@@ -7,7 +7,7 @@ import { goldPrice, marketSeries, money } from '@/lib/goldcalc-data'
 
 export function GoldPriceCard() {
   return (
-    <Card className="border-primary/20 bg-primary text-primary-foreground">
+    <Card className="border-[#8f5b00]/30 bg-linear-to-br from-[#8f5b00] via-[#c98905] to-[#f0c040] text-white">
       <CardContent className="flex flex-col justify-between gap-6 p-6 sm:flex-row sm:items-end">
         <div>
           <div className="flex items-center gap-2 text-sm text-primary-foreground/60">

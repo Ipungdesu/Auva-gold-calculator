@@ -1,22 +1,40 @@
 'use client'
 
-import { Home, Banknote, TrendingUp, Newspaper, History, BarChart2 } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Home, Banknote, TrendingUp, Newspaper, History } from 'lucide-react'
 
+// Keep Page type for backward-compat — used on / (GoldCalcApp)
 export type Page = 'home' | 'gold' | 'pivot' | 'news' | 'market' | 'history' | 'dashboard'
 
 const navItems = [
-  { id: 'home' as Page, label: 'HOME', icon: Home },
-  { id: 'gold' as Page, label: 'GOLD', icon: Banknote },
-  { id: 'pivot' as Page, label: 'PIVOT', icon: TrendingUp },
-  { id: 'news' as Page, label: 'NEWS', icon: Newspaper },
+  { href: '/', label: 'HOME', icon: Home, matchExact: true },
+  { href: '/gold', label: 'GOLD', icon: Banknote, matchExact: false },
+  { href: '/pivot', label: 'PIVOT', icon: TrendingUp, matchExact: false },
+  { href: '/news', label: 'NEWS', icon: Newspaper, matchExact: false },
 ]
 
 interface SidebarNavigationProps {
-  page: Page
-  setPage: (p: Page) => void
+  /** Optional: overrides path-based active detection (used by / SPA only) */
+  page?: Page
+  /** Accepted so existing callers don't break, but Link handles actual navigation */
+  setPage?: (p: Page) => void
 }
 
-export function SidebarNavigation({ page, setPage }: SidebarNavigationProps) {
+export function SidebarNavigation({ page }: SidebarNavigationProps) {
+  const pathname = usePathname()
+
+  const isItemActive = (href: string, exact: boolean): boolean => {
+    if (page) {
+      // SPA mode at root: use page state to determine active
+      if (href === '/' && exact) return ['home', 'market', 'dashboard', 'history'].includes(page)
+      if (href === '/gold') return page === 'gold'
+      if (href === '/pivot') return page === 'pivot'
+      if (href === '/news') return page === 'news'
+    }
+    return exact ? pathname === href : pathname.startsWith(href)
+  }
+
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
       {/* Brand Header */}
@@ -36,21 +54,21 @@ export function SidebarNavigation({ page, setPage }: SidebarNavigationProps) {
             Main Navigation
           </p>
           {navItems.map((item) => {
-            const isActive = item.id === page || (page === 'market' && item.id === 'home') || (page === 'dashboard' && item.id === 'home')
+            const active = isItemActive(item.href, item.matchExact)
             const Icon = item.icon
             return (
-              <button
-                key={item.id}
-                onClick={() => setPage(item.id)}
+              <Link
+                key={item.href}
+                href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-xs font-bold tracking-wide transition-all ${
-                  isActive
+                  active
                     ? 'bg-[#e6f4fe] text-[#0292e3]'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Icon className={`h-4 w-4 ${isActive ? 'text-[#0292e3]' : 'text-slate-400'}`} />
+                <Icon className={`h-4 w-4 ${active ? 'text-[#0292e3]' : 'text-slate-400'}`} />
                 {item.label}
-              </button>
+              </Link>
             )
           })}
 
@@ -59,17 +77,18 @@ export function SidebarNavigation({ page, setPage }: SidebarNavigationProps) {
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
             Additional Views
           </p>
-          <button
-            onClick={() => setPage('history')}
+          {/* History is only available on root SPA */}
+          <Link
+            href="/"
             className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-xs font-bold tracking-wide transition-all ${
               page === 'history'
                 ? 'bg-[#e6f4fe] text-[#0292e3]'
                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
             }`}
           >
-            <History className="h-4 w-4 text-slate-400" />
+            <History className={`h-4 w-4 ${page === 'history' ? 'text-[#0292e3]' : 'text-slate-400'}`} />
             HISTORY
-          </button>
+          </Link>
         </nav>
 
         {/* Footer */}
