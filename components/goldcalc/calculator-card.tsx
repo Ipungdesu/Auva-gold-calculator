@@ -172,7 +172,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           <div className="mt-2 grid grid-cols-[1fr_auto] gap-3">
             <button
               onClick={calculate}
-              className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#A80038] to-[#FD3A69] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
+              className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#291F6C] to-[#00A9E8] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
             >
               <Calculator className="h-4 w-4" />
               <span>Calculate</span>
