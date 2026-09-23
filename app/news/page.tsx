@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { AppHeader } from '@/components/goldcalc/app-header'
 import { BottomNavigation } from '@/components/goldcalc/bottom-navigation'
 import { NewsFeed, type NewsArticle } from '@/components/news/NewsFeed'
