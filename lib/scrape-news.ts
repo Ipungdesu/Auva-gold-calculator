@@ -40,6 +40,7 @@ async function fetchNewsForCategory(category: string): Promise<NewsArticle[]> {
       title: item.title,
       link: item.url,
       image_url: item.image_url ?? null,
+      description: item.description ?? item.snippet ?? null,
       source: item.source ?? "unknown",
       category,
       published_at: item.published_at,
