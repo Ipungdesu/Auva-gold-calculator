@@ -11,15 +11,21 @@ const items = [
   { href: '/news', label: 'NEWS', icon: Newspaper, matchExact: false },
 ]
 
-export function BottomNavigation() {
+interface BottomNavigationProps {
+  page?: string
+  setPage?: (page: string) => void
+}
+
+export function BottomNavigation({ page }: BottomNavigationProps) {
   const pathname = usePathname()
+  const currentPath = page ? `/${page}` : pathname
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-slate-200 bg-white/95 px-2 backdrop-blur-md">
       {items.map((item) => {
         const isActive = item.matchExact
-          ? pathname === item.href
-          : pathname.startsWith(item.href)
+          ? currentPath === item.href || (item.href === '/' && currentPath === '/home')
+          : currentPath.startsWith(item.href)
         const Icon = item.icon
 
         return (
