@@ -85,7 +85,7 @@ export default function GoldCalcApp() {
       </div>
 
       {/* Mobile Persistent Bottom Navigation */}
-      <BottomNavigation page={page} setPage={setPage} />
+      <BottomNavigation page={page} setPage={setPage}/>
 
       {/* News Modal */}
       {selectedNews && (

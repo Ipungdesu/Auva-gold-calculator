@@ -3,9 +3,9 @@ import { INSTRUMENTS } from '@/lib/instrument-config'
 import { Home, Banknote, TrendingUp, Newspaper } from 'lucide-react'
 
 export const metadata = {
-  title: 'Digital Pivot Point — AUVA',
+  title: 'Digital NEST — AUVA',
   description:
-    'Calculate Classic Pivot Point using historical data or manual OHLC input for Gold, Hangseng, and Nikkei.',
+    'Calculate NEST transaction signal using historical Open and Close data.',
 }
 
 // ── Card icons (SVG) per instrument ─────────────────────────────────────────
@@ -13,30 +13,53 @@ const ICONS: Record<string, React.ReactNode> = {
   gold: (
     <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">
       <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.25)" />
-      <text x="20" y="26" textAnchor="middle" fontSize="18" fill="white" fontWeight="bold">
+      <text
+        x="20"
+        y="26"
+        textAnchor="middle"
+        fontSize="18"
+        fill="white"
+        fontWeight="bold"
+      >
         ✦
       </text>
     </svg>
   ),
+
   hangseng: (
     <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">
       <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.25)" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="white" fontWeight="bold">
+      <text
+        x="20"
+        y="26"
+        textAnchor="middle"
+        fontSize="16"
+        fill="white"
+        fontWeight="bold"
+      >
         韓
       </text>
     </svg>
   ),
+
   nikkei: (
     <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">
       <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.25)" />
-      <text x="20" y="26" textAnchor="middle" fontSize="13" fill="white" fontWeight="bold">
+      <text
+        x="20"
+        y="26"
+        textAnchor="middle"
+        fontSize="13"
+        fill="white"
+        fontWeight="bold"
+      >
         225
       </text>
     </svg>
   ),
 }
 
-export default function PivotLandingPage() {
+export default function NestLandingPage() {
   const instrumentEntries = Object.entries(INSTRUMENTS)
 
   return (
@@ -44,10 +67,17 @@ export default function PivotLandingPage() {
       {/* Header */}
       <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md">
         <div className="flex items-center gap-1.5 text-xl font-bold tracking-tight">
-          <svg className="h-5 w-5 text-[#0292e3]" viewBox="0 0 24 24" fill="currentColor">
+          <svg
+            className="h-5 w-5 text-[#0292e3]"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
             <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
           </svg>
-          <span className="text-[#0292e3] font-extrabold tracking-tight">AUVA</span>
+
+          <span className="text-[#0292e3] font-extrabold tracking-tight">
+            AUVA
+          </span>
         </div>
       </header>
 
@@ -58,13 +88,14 @@ export default function PivotLandingPage() {
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             Transaction Concept
           </h1>
+
           <p className="mt-1 text-sm text-slate-500 leading-relaxed">
-            Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari dari data harga tertinggi, terendah, dan penutupan periode sebelumnya
-            untuk menentukan area support dan resistance.
+            Konsep transaksi yang menggunakan perbandingan harga Open saat ini dengan harga Close sebelumnya
+            untuk menentukan bias arah transaksi.
           </p>
         </div>
 
-        {/* Instrument cards — driven purely from INSTRUMENTS config */}
+        {/* Instrument cards */}
         <div className="flex flex-col gap-4">
           {instrumentEntries.map(([slug, config]) => (
             <div
@@ -90,7 +121,7 @@ export default function PivotLandingPage() {
 
               {/* CTA button */}
               <Link
-                href={`/pivot/${slug}`}
+                href={`/pivot/nest/${slug}`}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-black/20 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-black/30 active:scale-[0.98]"
               >
                 Calculate →
@@ -98,19 +129,22 @@ export default function PivotLandingPage() {
             </div>
           ))}
         </div>
-         {/* ⬇️ TARUH SWITCH DI SINI ⬇️ */}
+
+        {/* Transaction Concept Switch */}
         <div className="mt-6 rounded-xl bg-slate-200/70 p-1">
           <div className="grid grid-cols-2 gap-1">
+            {/* Pivot - inactive */}
             <Link
               href="/pivot"
-              className="rounded-lg bg-white py-2.5 text-center text-xs font-bold tracking-wider text-[#0292e3] shadow-sm"
+              className="rounded-lg py-2.5 text-center text-xs font-bold tracking-wider text-[#64748b] hover:text-[#0292e3]"
             >
               PIVOT POINT
             </Link>
 
+            {/* NEST - active */}
             <Link
               href="/pivot/nest"
-              className="rounded-lg py-2.5 text-center text-xs font-bold tracking-wider text-[#64748b]"
+              className="rounded-lg bg-white py-2.5 text-center text-xs font-bold tracking-wider text-[#0292e3] shadow-sm"
             >
               NEST
             </Link>
@@ -127,6 +161,7 @@ export default function PivotLandingPage() {
           <Home className="h-5 w-5" />
           <span className="text-[11px] font-bold tracking-wider">HOME</span>
         </Link>
+
         <Link
           href="/gold"
           className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400 hover:text-slate-600"
@@ -134,6 +169,7 @@ export default function PivotLandingPage() {
           <Banknote className="h-5 w-5" />
           <span className="text-[11px] font-bold tracking-wider">GOLD</span>
         </Link>
+
         <Link
           href="/pivot"
           className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-[#0292e3]"
@@ -141,6 +177,7 @@ export default function PivotLandingPage() {
           <TrendingUp className="h-5 w-5" />
           <span className="text-[11px] font-bold tracking-wider">PIVOT</span>
         </Link>
+
         <Link
           href="/news"
           className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400 hover:text-slate-600"
