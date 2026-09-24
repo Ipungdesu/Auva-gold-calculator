@@ -3,6 +3,15 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, Banknote, TrendingUp, Newspaper } from 'lucide-react'
+import type { Dispatch, SetStateAction } from 'react'
+import type { Page } from './sidebar-navigation'
+
+export interface BottomNavigationProps {
+  /** Optional: overrides path-based active detection (used by / SPA only) */
+  page?: Page | string
+  /** Accepted so existing callers don't break, but Link handles actual navigation */
+  setPage?: ((p: Page) => void) | ((p: string) => void) | Dispatch<SetStateAction<Page>>
+}
 
 const items = [
   { href: '/', label: 'HOME', icon: Home, matchExact: true },
@@ -11,15 +20,23 @@ const items = [
   { href: '/news', label: 'NEWS', icon: Newspaper, matchExact: false },
 ]
 
-export function BottomNavigation() {
+export function BottomNavigation({ page }: BottomNavigationProps = {}) {
   const pathname = usePathname()
+
+  const isItemActive = (href: string, exact: boolean): boolean => {
+    if (page) {
+      if (href === '/' && exact) return ['home', 'market', 'dashboard', 'history'].includes(page)
+      if (href === '/gold') return page === 'gold'
+      if (href === '/pivot') return page === 'pivot'
+      if (href === '/news') return page === 'news'
+    }
+    return exact ? pathname === href : pathname.startsWith(href)
+  }
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-slate-200 bg-white/95 px-2 backdrop-blur-md">
       {items.map((item) => {
-        const isActive = item.matchExact
-          ? pathname === item.href
-          : pathname.startsWith(item.href)
+        const isActive = isItemActive(item.href, item.matchExact)
         const Icon = item.icon
 
         return (

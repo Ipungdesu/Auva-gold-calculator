@@ -29,18 +29,18 @@ export const INSTRUMENTS: Record<string, InstrumentConfig> = {
     label: 'GOLD',
     liveBadge: 'Reference XAU/USD',
     subtitle:
-      'Pivot Point levels and directional market signal calculated from manually entered data.',
-    gradient: 'from-[#8f5b00] via-[#c98905] to-[#f0c040]',
+      'XAU/USD Market.',
+    gradient: 'from-[#D4AF37] via-[#c98905] to-[#f0c040]',
     accentColor: '#b8860b',
     softColor: '#fff9dc',
     analysisName: 'DIGITAL GOLD',
   },
   hangseng: {
     dbSymbol: 'HSI',
-    label: 'HANG SENG',
+    label: 'HANGSENG Index',
     liveBadge: 'Reference HSI',
     subtitle:
-      'Pivot Point levels and directional market signal calculated from manually entered data.',
+      'HSI Market.',
     gradient: 'from-[#A80038] to-[#FD3A69]',
     accentColor: '#A80038',
     softColor: '#fff0f3',
@@ -51,7 +51,7 @@ export const INSTRUMENTS: Record<string, InstrumentConfig> = {
     label: 'NIKKEI INDEX',
     liveBadge: 'Reference NIKKEI',
     subtitle:
-      'Pivot Point levels and directional market signal calculated from manually entered data.',
+      'Nikkei 225 Market.',
     gradient: 'from-[#291F6C] to-[#00A9E8]',
     accentColor: '#291F6C',
     softColor: '#eaf7ff',
