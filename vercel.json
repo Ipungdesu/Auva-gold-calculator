@@ -1,6 +1,20 @@
 {
   "crons": [
-    { "path": "/api/cron/scrape-latest", "schedule": "30 21 * * *" },
-    { "path": "/api/cron/scrape-news", "schedule": "0 0 * * *" }
+    {
+      "path": "/api/cron/scrape-latest",
+      "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/cron/scrape-latest",
+      "schedule": "30 21 * * *"
+    },
+    {
+      "path": "/api/cron/scrape-latest",
+      "schedule": "0 22 * * *"
+    },
+    {
+      "path": "/api/cron/scrape-news",
+      "schedule": "0 0 * * *"
+    }
   ]
 }
