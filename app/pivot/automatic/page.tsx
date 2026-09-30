@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, RefreshCw, Info, Home, Banknote, TrendingUp, Newspaper, AlertCircle } from "lucide-react";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { calculatePivotLevels, determineSignal } from "@/lib/calculate-pivot";
+import { AppHeader } from "@/components/goldcalc/app-header";
 
 export const revalidate = 0;
 
@@ -70,18 +71,7 @@ export default async function AutomaticPivotPage() {
   if (ohlcRows.length === 0) {
     return (
       <div className="min-h-screen bg-[#f4f7fb] text-slate-900 pb-24 font-sans antialiased">
-        <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md">
-          <Link href="/" className="p-1 text-slate-600 hover:text-slate-900 transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div className="flex items-center gap-1.5 text-xl font-bold tracking-tight">
-            <svg className="h-5 w-5 text-[#0292e3]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
-            </svg>
-            <span className="text-[#0292e3] font-extrabold tracking-tight">Auva</span>
-          </div>
-          <div className="w-8" />
-        </header>
+        <AppHeader backHref="/" />
 
         <main className="mx-auto flex w-full max-w-md flex-col items-center justify-center gap-4 px-4 py-16 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 text-amber-600 border border-amber-200">
@@ -115,25 +105,15 @@ export default async function AutomaticPivotPage() {
   return (
     <div className="min-h-screen bg-[#f4f7fb] text-slate-900 pb-24 font-sans antialiased">
       {/* Top Header */}
-      <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md">
-        <Link href="/" className="p-1 text-slate-600 hover:text-slate-900 transition-colors">
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-
-        {/* Brand Logo - A Auva */}
-        <div className="flex items-center gap-1.5 text-xl font-bold tracking-tight">
-          <svg className="h-5 w-5 text-[#0292e3]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
-          </svg>
-          <span className="text-[#0292e3] font-extrabold tracking-tight">Auva</span>
-        </div>
-
-        {/* Live Badge */}
-        <div className="flex items-center gap-1.5 rounded-full border border-blue-100 bg-[#e6f4fe] px-3 py-1 text-xs font-semibold text-[#0292e3]">
-          <span className="h-2 w-2 rounded-full bg-[#0292e3] animate-pulse" />
-          <span>Live XAU/USD</span>
-        </div>
-      </header>
+      <AppHeader
+        backHref="/"
+        rightElement={
+          <div className="flex items-center gap-1.5 rounded-full border border-blue-100 bg-[#e6f4fe] px-3 py-1 text-xs font-semibold text-[#0292e3]">
+            <span className="h-2 w-2 rounded-full bg-[#0292e3] animate-pulse" />
+            <span>Live XAU/USD</span>
+          </div>
+        }
+      />
 
       <main className="mx-auto flex w-full max-w-md flex-col gap-5 px-4 py-5 sm:max-w-xl">
         {/* Title Section */}

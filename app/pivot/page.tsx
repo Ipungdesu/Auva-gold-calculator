@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { INSTRUMENTS } from '@/lib/instrument-config'
 import { Home, Banknote, TrendingUp, Newspaper } from 'lucide-react'
+import { AppHeader } from '@/components/goldcalc/app-header'
 
 export const metadata = {
   title: 'Digital Pivot Point — AUVA',
@@ -42,14 +43,7 @@ export default function PivotLandingPage() {
   return (
     <div className="min-h-screen bg-[#f4f7fb] text-slate-900 font-sans antialiased pb-24">
       {/* Header */}
-      <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md">
-        <div className="flex items-center gap-1.5 text-xl font-bold tracking-tight">
-          <svg className="h-5 w-5 text-[#0292e3]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
-          </svg>
-          <span className="text-[#0292e3] font-extrabold tracking-tight">AUVA</span>
-        </div>
-      </header>
+      <AppHeader />
 
       {/* Main content */}
       <main className="mx-auto w-full max-w-md px-4 py-6 sm:max-w-xl">

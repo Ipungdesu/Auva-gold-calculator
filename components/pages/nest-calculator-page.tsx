@@ -14,6 +14,7 @@ import {
   RotateCcw,
   CalendarDays,
 } from 'lucide-react'
+import { AppHeader } from '@/components/goldcalc/app-header'
 
 interface NestCalculatorPageProps {
   symbol: string
@@ -263,35 +264,15 @@ export default function NestCalculatorPage({
           HEADER
       ===================================================== */}
 
-      <header className="sticky top-0 z-30 flex h-[72px] w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md">
-        <Link
-          href="/pivot/nest"
-          className="flex h-8 w-8 items-center justify-center text-slate-600"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full border border-blue-200 bg-white shadow-sm">
-            <svg
-              className="h-5 w-5 text-[#0292e3]"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
-            </svg>
+      <AppHeader
+        backHref="/pivot/nest"
+        rightElement={
+          <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold text-[#172554]">
+            <span className="h-2 w-2 rounded-full bg-[#0292e3]" />
+            Live XAUUSD
           </div>
-
-          <span className="text-xl font-extrabold tracking-tight text-[#14509b]">
-            AUVA
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold text-[#172554]">
-          <span className="h-2 w-2 rounded-full bg-[#0292e3]" />
-          Live XAUUSD
-        </div>
-      </header>
+        }
+      />
 
       {/* =====================================================
           MAIN
