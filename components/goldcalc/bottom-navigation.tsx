@@ -20,11 +20,6 @@ const items = [
   { href: '/news', label: 'NEWS', icon: Newspaper, matchExact: false },
 ]
 
-interface BottomNavigationProps {
-  page?: string
-  setPage?: (page: string) => void
-}
-
 export function BottomNavigation({ page }: BottomNavigationProps) {
   const pathname = usePathname()
   const currentPath = page ? `/${page}` : pathname

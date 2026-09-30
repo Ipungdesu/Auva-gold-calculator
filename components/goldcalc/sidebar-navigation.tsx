@@ -38,12 +38,24 @@ export function SidebarNavigation({ page }: SidebarNavigationProps) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
       {/* Brand Header */}
-      <div className="flex h-16 items-center border-b border-slate-200 px-6">
-        <div className="flex items-center gap-2 text-2xl font-bold tracking-tight">
+      <div className="flex h-16 items-center justify-between border-b border-slate-200 px-6">
+        <Link href="/" className="flex items-center gap-2 text-2xl font-bold tracking-tight">
           <svg className="h-6 w-6 text-[#0292e3]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
           </svg>
           <span className="text-[#0292e3] font-extrabold tracking-tight">Auva</span>
+        </Link>
+
+        {/* Black & White Trademark Badge */}
+        <div
+          className="relative h-7 w-7 overflow-hidden rounded-full border border-slate-900/30 bg-black shadow-xs"
+          title="Low Profile | High Profit ™"
+        >
+          <img
+            src="/trademark.jpg"
+            alt="AUVA Trademark"
+            className="h-full w-full object-cover filter grayscale contrast-125 brightness-95"
+          />
         </div>
       </div>
 
@@ -92,8 +104,13 @@ export function SidebarNavigation({ page }: SidebarNavigationProps) {
         </nav>
 
         {/* Footer */}
-        <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3 text-center text-xs font-medium text-slate-500">
-          Auva Gold Calculator v2.0
+        <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 text-center">
+          <p className="text-[10px] font-black uppercase tracking-wider text-slate-800">
+            Low Profile <span className="text-slate-400">|</span> High Profit™
+          </p>
+          <p className="text-[9px] text-slate-400 mt-0.5 font-medium">
+            Auva Gold Calculator v2.0
+          </p>
         </div>
       </div>
     </aside>

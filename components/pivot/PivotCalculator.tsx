@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { calculatePivotLevels, determineSignal } from '@/lib/calculate-pivot'
 import type { InstrumentConfig } from '@/lib/instrument-config'
+import { AppHeader } from '@/components/goldcalc/app-header'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -194,25 +195,15 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
   return (
     <div className="min-h-screen bg-[#f4f7fb] text-slate-900 font-sans antialiased pb-24">
       {/* ── Top Header ── */}
-      <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md">
-        <Link href="/pivot" className="p-1 text-slate-600 hover:text-slate-900 transition-colors">
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-
-        {/* Brand */}
-        <div className="flex items-center gap-1.5 text-xl font-bold tracking-tight">
-          <svg className="h-5 w-5 text-[#0292e3]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
-          </svg>
-          <span className="text-[#0292e3] font-extrabold tracking-tight">AUVA</span>
-        </div>
-
-        {/* Live badge */}
-        <div className="flex items-center gap-1.5 rounded-full border border-blue-100 bg-[#e6f4fe] px-3 py-1 text-xs font-semibold text-[#0292e3]">
-          <span className="h-2 w-2 rounded-full bg-[#0292e3] animate-pulse" />
-          <span>{config.liveBadge}</span>
-        </div>
-      </header>
+      <AppHeader
+        backHref="/pivot"
+        rightElement={
+          <div className="flex items-center gap-1.5 rounded-full border border-blue-100 bg-[#e6f4fe] px-3 py-1 text-xs font-semibold text-[#0292e3]">
+            <span className="h-2 w-2 rounded-full bg-[#0292e3] animate-pulse" />
+            <span>{config.liveBadge}</span>
+          </div>
+        }
+      />
 
       <main className="mx-auto flex w-full max-w-md flex-col gap-5 px-4 py-5 sm:max-w-xl">
         {/* ── Section Title ── */}
