@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, X, Sparkles, ShieldCheck } from 'lucide-react'
+import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
 
 export interface AppHeaderProps {
   /** Optional link for back navigation button (e.g. on sub-pages) */
@@ -51,8 +52,20 @@ export function AppHeader({ backHref, rightElement, className = '' }: AppHeaderP
           </Link>
         </div>
 
-        {/* Right side: optional rightElement + Trademark Badge */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Right side: LIVE badge + Language Switcher + optional rightElement + Trademark Badge */}
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {/* LIVE status pill */}
+          <div className="flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold tracking-wide text-emerald-600">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <span>LIVE</span>
+          </div>
+
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
           {rightElement && (
             <div className="flex items-center">{rightElement}</div>
           )}
