@@ -13,32 +13,27 @@ import { HistoryPage } from '@/components/pages/history-page'
 import { GoldCalculatorPage } from '@/components/pages/gold-calculator-page'
 import { PivotCalculatorPage } from '@/components/pages/pivot-calculator-page'
 import { DashboardPage } from '@/components/pages/dashboard-page'
-import type { NewsItem, GoldHistory, PivotHistory } from '@/lib/goldcalc-data'
+import { useGoldHistory } from '@/components/providers/gold-history-provider' // BARU
+import type { NewsItem, PivotHistory } from '@/lib/goldcalc-data' // GoldHistory dihapus
 
 export default function GoldCalcApp() {
   const [page, setPage] = useState<Page>('home')
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null)
-  const [goldItems, setGoldItems] = useState<GoldHistory[]>([])
+  const { goldItems, setGoldItems, addGold } = useGoldHistory() // BARU (menggantikan useState + addGold lokal)
   const [pivotItems, setPivotItems] = useState<PivotHistory[]>([])
 
-  // Hydrate from localStorage
+  // Hydrate from localStorage (Pivot saja — Gold kini di GoldHistoryProvider)
   useEffect(() => {
     try {
-      setGoldItems(JSON.parse(localStorage.getItem('goldcalc-gold') || '[]'))
       setPivotItems(JSON.parse(localStorage.getItem('goldcalc-pivot') || '[]'))
     } catch {}
   }, [])
 
-  // Persist to localStorage
-  useEffect(() => {
-    localStorage.setItem('goldcalc-gold', JSON.stringify(goldItems))
-  }, [goldItems])
-
+  // Persist to localStorage (Pivot saja)
   useEffect(() => {
     localStorage.setItem('goldcalc-pivot', JSON.stringify(pivotItems))
   }, [pivotItems])
 
-  const addGold = (x: GoldHistory) => setGoldItems((i) => [x, ...i])
   const addPivot = (x: PivotHistory) => setPivotItems((i) => [x, ...i])
 
   // Page router
@@ -47,7 +42,8 @@ export default function GoldCalcApp() {
       case 'home':
         return <HomePage setPage={setPage} showNews={setSelectedNews} />
       case 'gold':
-        return <GoldCalculatorPage addGold={addGold} />
+        return <GoldCalculatorPage addGold={addGold} goldItems={goldItems}/>
+  
       case 'pivot':
         return <PivotCalculatorPage addPivot={addPivot} />
       case 'market':
