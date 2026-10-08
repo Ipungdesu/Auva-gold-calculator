@@ -135,7 +135,9 @@ export const number = (n: number) =>
   n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 export type PivotResult = ReturnType<typeof calculatePivot>
-export type GoldHistory = { id: string; capital: number; buyingPrice: number; sellingPrice: number; quantity: number; profit: number; date: string }
+export type GoldHistory = {  id: string; capital: number; buyingPrice: number
+  sellingPrice: number; buyingPriceUsd?: number; sellingPriceUsd?: number; quantity: number; profit: number
+  date: string }
 export type PivotHistory = { id: string; type: string; ohlc: typeof mockOHLC; result: PivotResult; date: string }
 export const defaultPivot = calculatePivot(mockOHLC.open, mockOHLC.high, mockOHLC.low, mockOHLC.close)
 
