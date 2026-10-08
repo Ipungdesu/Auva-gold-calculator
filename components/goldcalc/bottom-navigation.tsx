@@ -24,16 +24,6 @@ export function BottomNavigation({ page }: BottomNavigationProps) {
   const pathname = usePathname()
   const currentPath = page ? `/${page}` : pathname
 
-  const isItemActive = (href: string, exact: boolean): boolean => {
-    if (page) {
-      if (href === '/' && exact) return ['home', 'market', 'dashboard', 'history'].includes(page)
-      if (href === '/gold') return page === 'gold'
-      if (href === '/pivot') return page === 'pivot'
-      if (href === '/news') return page === 'news'
-    }
-    return exact ? pathname === href : pathname.startsWith(href)
-  }
-
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-slate-200 bg-white/95 px-2 backdrop-blur-md">
       {items.map((item) => {
