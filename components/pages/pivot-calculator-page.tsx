@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import {
   Sparkles,
@@ -413,6 +412,8 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
               <span>{translate(computedSignal.conditionText)}</span>
             </div>
           </div>
+        ))}
+      </div>
 
           {/* Card 3: Calculated Pivot Levels (Matching Attached Image) */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -539,40 +540,23 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
                 <span className="font-mono font-bold text-[#1e293b]">{money(computedLevels.s2)}</span>
               </div>
 
-              {/* S3 */}
-              <div className="flex items-center justify-between rounded-xl bg-[#f8fafc] px-4 py-2.5 text-xs">
-                <span className="font-bold text-[#7888a3]">S3</span>
-                <span className="font-mono font-bold text-[#1e293b]">{money(computedLevels.s3)}</span>
-              </div>
-
-              {/* S4 */}
-              <div className="flex items-center justify-between rounded-xl bg-[#f8fafc] px-4 py-2.5 text-xs">
-                <span className="font-bold text-[#7888a3]">S4</span>
-                <span className="font-mono font-bold text-[#1e293b]">{money(computedLevels.s4)}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Disclaimer Box */}
-          <div className="rounded-2xl border border-blue-100 bg-[#e6f4fe]/50 p-4 text-xs text-slate-600">
-            <p className="font-medium text-slate-700">
-              The market signal is generated based on the current price position relative to the Pivot Point, Resistance, and Support levels.
-            </p>
-            <p className="mt-1 text-[11px] text-slate-400">
-              Pivot signals are based on calculated market data and are not financial advice.
-            </p>
-          </div>
-
-          {/* New Calculation Button */}
-          <button
-            onClick={() => setMode('selection')}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#241e52] to-[#0292e3] py-3.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
+          <Link
+            href="/pivot"
+            className="rounded-lg bg-white py-2.5 text-center text-xs font-bold tracking-wider text-[#0292e3] shadow-sm"
           >
-            <RefreshCw className="h-4 w-4" />
-            <span>New Calculation</span>
-          </button>
+            PIVOT POINT
+          </Link>
+
+          <Link
+            href="/pivot/nest"
+            className="rounded-lg py-2.5 text-center text-xs font-bold tracking-wider text-[#64748b]"
+          >
+            NEST
+          </Link>
+
         </div>
-      )}
+      </div>
+
     </div>
   )
 }

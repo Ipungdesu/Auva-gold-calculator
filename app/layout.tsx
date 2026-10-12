@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { LanguageProvider } from '@/lib/LanguageContext'
 import './globals.css'
+import { GoldHistoryProvider } from '@/components/providers/gold-history-provider' // BARU
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
