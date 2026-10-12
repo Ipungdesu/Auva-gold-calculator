@@ -18,12 +18,14 @@ import {
   type MarketSignal,
 } from '@/lib/calculate-pivot'
 import { money, type PivotHistory } from '@/lib/goldcalc-data'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface PivotCalculatorPageProps {
   addPivot?: (x: PivotHistory) => void
 }
 
 export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
+  const { translate } = useTranslation()
   const [mode, setMode] = useState<'selection' | 'manual-input' | 'manual-result'>('selection')
 
  const [vals, setVals] = useState({
@@ -38,6 +40,12 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
   const [computedLevels, setComputedLevels] = useState<PivotLevels | null>(null)
   const [computedSignal, setComputedSignal] = useState<MarketSignal | null>(null)
   const [currentPrice, setCurrentPrice] = useState<number | null>(null)
+
+  const localizedPositionText = computedSignal?.positionText
+    .replace('Pivot', translate('Pivot'))
+    .replace(/is (above|below|equal to) today's Open/, (_, relation: string) =>
+      translate(`is ${relation} today's Open`),
+    )
 
   const update = (k: keyof typeof vals, v: string) => {
     setVals((x) => ({ ...x, [k]: parseFloat(v) || 0 }))
@@ -154,10 +162,10 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
       {mode === 'selection' && (
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Digital Gold Pivot Point
+            {translate('Digital Gold Pivot Point')}
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-            Calculate Classic Pivot Point using historical data or manual OHLC input.
+            {translate('Calculate Classic Pivot Point using historical data or manual OHLC input.')}
           </p>
         </div>
       )}
@@ -176,10 +184,10 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
               <div>
                 <h2 className="text-lg font-bold tracking-tight text-slate-900">
-                  AUTOMATIC PIVOT
+                  {translate('AUTOMATIC PIVOT')}
                 </h2>
                 <p className="mt-1 text-xs sm:text-sm text-slate-600">
-                  Calculate Pivot Point automatically using historical OHLC data.
+                  {translate('Calculate Pivot Point automatically using historical OHLC data.')}
                 </p>
               </div>
 
@@ -187,7 +195,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
                 href="/pivot/automatic"
                 className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#241e52] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#1a153e] active:scale-[0.99]"
               >
-                <span>Automatic Pivot</span>
+                <span>{translate('Automatic Pivot')}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -204,10 +212,10 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
               <div>
                 <h2 className="text-lg font-bold tracking-tight text-slate-900">
-                  MANUAL PIVOT
+                  {translate('MANUAL PIVOT')}
                 </h2>
                 <p className="mt-1 text-xs sm:text-sm text-slate-600">
-                  Enter Open, High, Low, and Close values manually.
+                  {translate('Enter Open, High, Low, and Close values manually.')}
                 </p>
               </div>
 
@@ -215,7 +223,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
                 onClick={() => setMode('manual-input')}
                 className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#241e52] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#1a153e] active:scale-[0.99]"
               >
-                <span>Manual Pivot</span>
+                <span>{translate('Manual Pivot')}</span>
                 <Keyboard className="h-4 w-4" />
               </button>
             </div>
@@ -230,18 +238,18 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
             onClick={() => setMode('selection')}
             className="flex w-fit items-center gap-1.5 text-xs font-semibold text-[#0292e3] hover:underline"
           >
-            <ChevronLeft className="h-4 w-4" /> Back to mode selection
+            <ChevronLeft className="h-4 w-4" /> {translate('Back to Selection')}
           </button>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-900">Manual OHLC Input</h2>
+            <h2 className="text-lg font-bold text-slate-900">{translate('Manual OHLC Input')}</h2>
             <p className="mt-1 text-xs text-slate-500">
-              Enter valid Open, High, Low, and Close values for XAUUSD.
+              {translate('Enter valid Open, High, Low, and Close values for XAUUSD.')}
             </p>
 
             {error && (
               <div className="mt-4 rounded-xl bg-rose-50 border border-rose-200 p-3.5 text-xs font-semibold text-rose-600">
-                {error}
+                {translate(error)}
               </div>
             )}
 
@@ -249,7 +257,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
               {(['open', 'high', 'low', 'close'] as const).map((k) => (
                 <div key={k} className="flex flex-col gap-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    {k}
+                    {translate(k.toUpperCase())}
                   </label>
                   <input
                     type="number"
@@ -266,7 +274,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
               onClick={handleCalculateManual}
               className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#241e52] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#1a153e]"
             >
-              <span>Calculate Pivot Points</span>
+              <span>{translate('Calculate Pivot Points')}</span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -279,13 +287,13 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
           {/* Header Title Section */}
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0292e3]">
-              <span>📈 DIGITAL GOLD FORMULA</span>
+              <span>📈 {translate('DIGITAL GOLD FORMULA')}</span>
             </div>
             <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-              Manual Pivot Result
+              {translate('Manual Pivot Result')}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              Pivot Point levels and directional market signal calculated from manually entered data.
+              {translate('Pivot Point levels and directional market signal calculated from manually entered data.')}
             </p>
           </div>
 
@@ -294,18 +302,18 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  ⚡ Manual Input Data
+                  ⚡ {translate('Manual Input Data')}
                 </span>
               </div>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-                Daily Timeframe
+                {translate('Daily Timeframe')}
               </span>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  OPEN
+                  {translate('OPEN')}
                 </span>
                 <div className="mt-1 text-base font-extrabold text-slate-900 font-mono">
                   {money(vals.open)}
@@ -314,7 +322,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
               <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  HIGH
+                  {translate('HIGH')}
                 </span>
                 <div className="mt-1 text-base font-extrabold text-slate-900 font-mono">
                   {money(vals.high)}
@@ -323,7 +331,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
               <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  LOW
+                  {translate('LOW')}
                 </span>
                 <div className="mt-1 text-base font-extrabold text-slate-900 font-mono">
                   {money(vals.low)}
@@ -332,7 +340,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
               <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  CLOSE
+                  {translate('CLOSE')}
                 </span>
                 <div className="mt-1 text-base font-extrabold text-slate-900 font-mono">
                   {money(vals.close)}
@@ -345,7 +353,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
                 onClick={() => setMode('manual-input')}
                 className="flex items-center gap-1 text-xs font-bold text-[#0292e3] hover:underline"
               >
-                <span>✏ Edit Inputs</span>
+                <span>✏ {translate('Edit Inputs')}</span>
               </button>
             </div>
           </div>
@@ -356,18 +364,18 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#0292e3]" />
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  MARKET SIGNAL
+                  {translate('MARKET SIGNAL')}
                 </span>
               </div>
               <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
-                • {computedSignal.bias}
+                • {translate(computedSignal.bias)}
               </span>
             </div>
 
             <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50/40 p-4 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
-                  DIRECTION
+                  {translate('DIRECTION')}
                 </span>
                 <div className="mt-0.5 text-2xl font-extrabold text-emerald-600 flex items-center gap-1">
                   <span>{computedSignal.direction}</span>
@@ -376,7 +384,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
               </div>
 
               <div className="text-right">
-                <span className="text-[10px] font-bold text-slate-400">Current Price</span>
+                <span className="text-[10px] font-bold text-slate-400">{translate('Current Price')}</span>
                 <div className="text-lg font-extrabold text-slate-900 font-mono">
                    {currentPrice !== null ? money(currentPrice)
                    : '-'}
@@ -386,14 +394,14 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-                <div className="text-[10px] font-medium text-slate-400">Current Position</div>
+                <div className="text-[10px] font-medium text-slate-400">{translate('Current Position')}</div>
                 <div className="mt-0.5 text-xs font-bold text-slate-900">
-                  {computedSignal.positionText}
+                  {localizedPositionText}
                 </div>
               </div>
 
               <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-                <div className="text-[10px] font-medium text-slate-400">Next Resistance</div>
+                <div className="text-[10px] font-medium text-slate-400">{translate('Next Resistance')}</div>
                 <div className="mt-0.5 text-xs font-bold text-slate-900">
                   {computedSignal.targetResistanceText}
                 </div>
@@ -402,15 +410,15 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
 
             <div className="mt-3 flex items-start gap-2 rounded-xl border border-slate-100 bg-slate-50/80 p-3 text-xs text-slate-600">
               <Info className="h-4 w-4 text-[#0292e3] shrink-0 mt-0.5" />
-              <span>{computedSignal.conditionText}</span>
+              <span>{translate(computedSignal.conditionText)}</span>
             </div>
           </div>
 
           {/* Card 3: Calculated Pivot Levels (Matching Attached Image) */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between pb-4">
-              <h2 className="text-base font-bold text-slate-900">Calculated Pivot Levels</h2>
-              <span className="text-xs text-slate-400">Standard Floor Pivots</span>
+              <h2 className="text-base font-bold text-slate-900">{translate('Calculated Pivot Levels')}</h2>
+              <span className="text-xs text-slate-400">{translate('Standard Floor Pivots')}</span>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -432,7 +440,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
                   <span className="font-bold text-[#1e293b]">R2</span>
                   {computedSignal.nextTargetLevel === 'R2' && (
                     <span className="rounded-md border border-[#bce3fe] bg-[#dff3ff] px-2 py-0.5 text-[10px] font-bold text-[#0292e3]">
-                      Next Target
+                      {translate('Next Target')}
                     </span>
                   )}
                 </div>
@@ -453,7 +461,7 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
                   </span>
                   {computedSignal.activeLevel === 'R1' && (
                     <span className="rounded-md bg-linear-to-r from-[#241e52] to-[#0292e3] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
-                      CURRENT LEVEL
+                      {translate('CURRENT LEVEL')}
                     </span>
                   )}
                 </div>

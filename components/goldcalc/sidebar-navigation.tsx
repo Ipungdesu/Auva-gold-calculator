@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, Banknote, TrendingUp, Newspaper, History } from 'lucide-react'
+import { useTranslation } from '@/lib/LanguageContext'
 
 // Keep Page type for backward-compat — used on / (GoldCalcApp)
 export type Page = 'home' | 'gold' | 'pivot' | 'news' | 'market' | 'history' | 'dashboard'
@@ -22,6 +23,7 @@ interface SidebarNavigationProps {
 }
 
 export function SidebarNavigation({ page }: SidebarNavigationProps) {
+  const { translate } = useTranslation()
   const pathname = usePathname()
 
   const isItemActive = (href: string, exact: boolean): boolean => {
@@ -63,7 +65,7 @@ export function SidebarNavigation({ page }: SidebarNavigationProps) {
       <div className="flex flex-1 flex-col justify-between p-4">
         <nav className="flex flex-col gap-1.5">
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Main Navigation
+            {translate('Main Navigation')}
           </p>
           {navItems.map((item) => {
             const active = isItemActive(item.href, item.matchExact)
@@ -79,7 +81,7 @@ export function SidebarNavigation({ page }: SidebarNavigationProps) {
                 }`}
               >
                 <Icon className={`h-4 w-4 ${active ? 'text-[#0292e3]' : 'text-slate-400'}`} />
-                {item.label}
+                {translate(item.label)}
               </Link>
             )
           })}
@@ -87,7 +89,7 @@ export function SidebarNavigation({ page }: SidebarNavigationProps) {
           <div className="my-3 border-t border-slate-100" />
 
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Additional Views
+            {translate('Additional Views')}
           </p>
           {/* History is only available on root SPA */}
           <Link
@@ -99,7 +101,7 @@ export function SidebarNavigation({ page }: SidebarNavigationProps) {
             }`}
           >
             <History className={`h-4 w-4 ${page === 'history' ? 'text-[#0292e3]' : 'text-slate-400'}`} />
-            HISTORY
+            {translate('HISTORY')}
           </Link>
         </nav>
 

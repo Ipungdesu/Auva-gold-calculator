@@ -5,12 +5,14 @@ import { ChevronDown, Radio } from 'lucide-react'
 import { NewsCard } from '@/components/goldcalc/news-card'
 import { TradingViewNewsWidget } from '@/components/goldcalc/tradingview-news-widget'
 import { news, categories, type NewsItem } from '@/lib/goldcalc-data'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface NewsPageProps {
   showNews: (n: NewsItem) => void
 }
 
 export function NewsPage({ showNews }: NewsPageProps) {
+  const { translate } = useTranslation()
   const [selectedCategory, setSelectedCategory] = useState('All News')
   const [showLiveStream, setShowLiveStream] = useState(false)
   const [visibleCount, setVisibleCount] = useState(6)
@@ -31,7 +33,7 @@ export function NewsPage({ showNews }: NewsPageProps) {
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Gold Fundamental News
+            {translate('Gold Fundamental News')}
           </h1>
 
           <button
@@ -39,11 +41,11 @@ export function NewsPage({ showNews }: NewsPageProps) {
             className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm hover:border-[#0292e3]"
           >
             <Radio className="h-3.5 w-3.5 text-[#0292e3]" />
-            {showLiveStream ? 'Show Card View' : 'TradingView Feed'}
+            {translate(showLiveStream ? 'Show Card View' : 'TradingView Feed')}
           </button>
         </div>
         <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-          Stay informed with important news related to gold and global financial markets.
+          {translate('Stay informed with important news related to gold and global financial markets.')}
         </p>
       </div>
 
@@ -69,7 +71,7 @@ export function NewsPage({ showNews }: NewsPageProps) {
                       : 'border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
-                  {cat}
+                  {translate(cat)}
                 </button>
               )
             })}
@@ -84,7 +86,7 @@ export function NewsPage({ showNews }: NewsPageProps) {
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-xs text-slate-500">
-              No news items available for this category.
+              {translate('No news items available for this category.')}
             </div>
           )}
 
@@ -95,7 +97,7 @@ export function NewsPage({ showNews }: NewsPageProps) {
                 onClick={() => setVisibleCount((prev) => prev + 3)}
                 className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50"
               >
-                <span>Load More News</span>
+                <span>{translate('Load More News')}</span>
                 <ChevronDown className="h-4 w-4 text-slate-500" />
               </button>
             </div>

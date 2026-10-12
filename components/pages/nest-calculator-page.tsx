@@ -264,15 +264,7 @@ export default function NestCalculatorPage({
           HEADER
       ===================================================== */}
 
-      <AppHeader
-        backHref="/pivot/nest"
-        rightElement={
-          <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold text-[#172554]">
-            <span className="h-2 w-2 rounded-full bg-[#0292e3]" />
-            Live XAUUSD
-          </div>
-        }
-      />
+      <AppHeader backHref="/pivot/nest" />
 
       {/* =====================================================
           MAIN

@@ -3,6 +3,7 @@
 import { ArrowRight } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { NewsImage } from '@/components/news/NewsImage'
+import { useTranslation } from '@/lib/LanguageContext'
 
 export type NewsArticle = {
   id: string
@@ -35,6 +36,7 @@ function formatPublishedDate(value: string) {
 }
 
 export function NewsFeed({ initialArticles }: { initialArticles: NewsArticle[] }) {
+  const { translate } = useTranslation()
   const [activeFilter, setActiveFilter] = useState<FilterValue>('all')
 
   const filteredArticles = useMemo(() => {
@@ -44,6 +46,15 @@ export function NewsFeed({ initialArticles }: { initialArticles: NewsArticle[] }
 
   return (
     <div>
+      <header className="mb-6">
+        <h1 className="text-[2.7rem] font-black leading-[0.98] tracking-[-0.06em] text-slate-900 sm:text-[4rem]">
+          {translate('Fundamental News')}
+        </h1>
+        <p className="mt-3 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
+          {translate('Stay informed with important news related to global financial markets.')}
+        </p>
+      </header>
+
       <div className="mb-6 overflow-x-auto pb-2">
         <div className="flex min-w-max items-center gap-3">
           {FILTERS.map((filter) => {
@@ -60,7 +71,7 @@ export function NewsFeed({ initialArticles }: { initialArticles: NewsArticle[] }
                     : 'border-[#d8dfe8] bg-white text-slate-700 hover:border-slate-300',
                 ].join(' ')}
               >
-                {filter.label}
+                {translate(filter.label)}
               </button>
             )
           })}
@@ -75,6 +86,7 @@ export function NewsFeed({ initialArticles }: { initialArticles: NewsArticle[] }
 const PAGE_SIZE = 4
 
 function PaginatedArticles({ articles }: { articles: NewsArticle[] }) {
+  const { translate } = useTranslation()
   const [currentPage, setCurrentPage] = useState(1)
 
   const totalPages = Math.max(1, Math.ceil(articles.length / PAGE_SIZE))
@@ -93,7 +105,7 @@ function PaginatedArticles({ articles }: { articles: NewsArticle[] }) {
   if (articles.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
-        No articles found for this category.
+        {translate('No articles found for this category.')}
       </div>
     )
   }
@@ -131,7 +143,7 @@ function PaginatedArticles({ articles }: { articles: NewsArticle[] }) {
                 rel="noopener noreferrer"
                 className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#0d72c9] transition-colors hover:text-[#0a5bb3]"
               >
-                <span>Read More</span>
+                <span>{translate('Read More')}</span>
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>
@@ -146,7 +158,7 @@ function PaginatedArticles({ articles }: { articles: NewsArticle[] }) {
               type="button"
               onClick={() => goTo(safePage - 1)}
               disabled={safePage === 1}
-              aria-label="Previous page"
+              aria-label={translate('Previous page')}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -179,7 +191,7 @@ function PaginatedArticles({ articles }: { articles: NewsArticle[] }) {
               type="button"
               onClick={() => goTo(safePage + 1)}
               disabled={safePage === totalPages}
-              aria-label="Next page"
+              aria-label={translate('Next page')}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -189,7 +201,7 @@ function PaginatedArticles({ articles }: { articles: NewsArticle[] }) {
           </div>
 
           <p className="text-[11px] font-medium tracking-wide text-slate-400">
-            Page {safePage} of {totalPages} &middot; {articles.length} articles
+            {translate('Page')} {safePage} {translate('of')} {totalPages} &middot; {articles.length} {translate('articles')}
           </p>
         </div>
       )}

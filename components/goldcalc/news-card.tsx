@@ -3,6 +3,7 @@
 import React from 'react'
 import { ArrowRight } from 'lucide-react'
 import type { NewsItem } from '@/lib/goldcalc-data'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface NewsCardProps {
   item: NewsItem
@@ -10,6 +11,8 @@ interface NewsCardProps {
 }
 
 export function NewsCard({ item, onClick }: NewsCardProps) {
+  const { translate } = useTranslation()
+
   return (
     <article
       onClick={onClick}
@@ -49,7 +52,7 @@ export function NewsCard({ item, onClick }: NewsCardProps) {
 
         {/* Read More Link */}
         <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[#241e52] group-hover:text-[#0292e3]">
-          <span>Read More</span>
+          <span>{translate('Read More')}</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </div>
       </div>

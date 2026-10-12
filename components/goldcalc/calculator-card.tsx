@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import { Calculator, Hourglass, TrendingUp } from 'lucide-react'
 import { formatRupiah, type GoldHistory } from '@/lib/goldcalc-data'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface CalculatorCardProps {
   addGold: (x: GoldHistory) => void
 }
 
 export function CalculatorCard({ addGold }: CalculatorCardProps) {
+  const { translate } = useTranslation()
   const [capital, setCapital] = useState('100000000')
   const [buyingPrice, setBuyingPrice] = useState('4000')
   const [sellingPrice, setSellingPrice] = useState('4400')
@@ -100,7 +102,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           {/* Capital */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              CAPITAL
+              {translate('CAPITAL')}
             </label>
             <div className="relative">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-600">
@@ -118,7 +120,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           {/* Buying Price (HB) */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              BUYING PRICE (HB)
+              {translate('BUYING PRICE (HB)')}
             </label>
             <input
               type="number"
@@ -131,7 +133,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           {/* Selling Price (HJ) */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              SELLING PRICE (HJ)
+              {translate('SELLING PRICE (HJ)')}
             </label>
             <input
               type="number"
@@ -144,7 +146,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           {/* Exchange Rate */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              EXCHANGE RATE
+              {translate('EXCHANGE RATE')}
             </label>
             <input
               type="number"
@@ -175,13 +177,13 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
               className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#291F6C] to-[#00A9E8] py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95 active:scale-[0.99]"
             >
               <Calculator className="h-4 w-4" />
-              <span>Calculate</span>
+              <span>{translate('Calculate')}</span>
             </button>
             <button
               onClick={handleReset}
               className="rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
-              Reset
+              {translate('Reset')}
             </button>
           </div>
         </div>
@@ -194,7 +196,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           <div className="relative overflow-hidden rounded-2xl border border-[#c98905]/30 bg-linear-to-br from-[#fff8dc] to-[#f7d774]/45 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#0292e3]">
-                GOLD QUANTITY
+                {translate('GOLD QUANTITY')}
               </span>
               <Hourglass className="h-5 w-5 text-[#0292e3]" />
             </div>
@@ -202,14 +204,14 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
               <span className="text-3xl font-extrabold text-slate-900">
                 {result.quantityGrams}
               </span>
-              <span className="text-sm font-bold text-[#0292e3]">grams</span>
+              <span className="text-sm font-bold text-[#0292e3]">{translate('grams')}</span>
             </div>
           </div>
 
           {/* Total Buying Price */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              TOTAL BUYING PRICE
+              {translate('TOTAL BUYING PRICE')}
             </span>
             <div className="mt-1 text-xl font-extrabold text-slate-900">
               {formatRupiah(result.totalBuyingPrice)}
@@ -219,7 +221,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           {/* Total Selling Price */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              TOTAL SELLING PRICE
+              {translate('TOTAL SELLING PRICE')}
             </span>
             <div className="mt-1 text-xl font-extrabold text-slate-900">
               {formatRupiah(result.totalSellingPrice)}
@@ -229,7 +231,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           {/* Price Difference (Spread) */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              PRICE DIFFERENCE (SPREAD)
+              {translate('PRICE DIFFERENCE (SPREAD)')}
             </span>
             <div className="mt-1 flex items-baseline gap-1 text-xl font-extrabold text-[#0292e3]">
               <span>{formatRupiah(result.spreadPerGram)}</span>
@@ -241,7 +243,7 @@ export function CalculatorCard({ addGold }: CalculatorCardProps) {
           <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50/70 to-blue-100/40 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#241e52]">
-                POTENTIAL PROFIT
+                {translate('POTENTIAL PROFIT')}
               </span>
               <span className="rounded-lg bg-[#0292e3] px-2.5 py-1 text-[11px] font-bold text-white">
                 +{result.profitPercent}%
