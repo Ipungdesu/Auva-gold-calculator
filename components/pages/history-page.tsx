@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Clock3, Trash2 } from 'lucide-react'
 import { formatRupiah, money, type GoldHistory, type PivotHistory } from '@/lib/goldcalc-data'
+import { useTranslation } from '@/lib/LanguageContext'
 
 const fmt = (n: number) => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
@@ -14,6 +15,7 @@ interface HistoryPageProps {
 }
 
 export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems }: HistoryPageProps) {
+  const { translate } = useTranslation()
   const [tab, setTab] = useState<'gold' | 'pivot'>('gold')
 
   const remove = (id: string) =>
@@ -30,10 +32,10 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Calculation History
+            {translate('Calculation History')}
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Stored locally in your browser session.
+            {translate('Stored locally in your browser session.')}
           </p>
         </div>
 
@@ -43,7 +45,7 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
           className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-rose-600 disabled:opacity-50 hover:bg-rose-50"
         >
           <Trash2 className="h-3.5 w-3.5" />
-          Clear all
+          {translate('Clear all')}
         </button>
       </div>
 
@@ -57,7 +59,7 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
               : 'text-slate-500 hover:text-slate-900'
           }`}
         >
-          Gold calculator ({goldItems.length})
+          {translate('Gold calculator')} ({goldItems.length})
         </button>
         <button
           onClick={() => setTab('pivot')}
@@ -67,7 +69,7 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
               : 'text-slate-500 hover:text-slate-900'
           }`}
         >
-          Pivot point ({pivotItems.length})
+          {translate('Pivot point')} ({pivotItems.length})
         </button>
       </div>
 
@@ -82,8 +84,8 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
               <div>
                 <div className="text-sm font-bold text-slate-900">
                   {tab === 'gold'
-                    ? `${(item as GoldHistory).quantity || 0} grams · Physical Gold`
-                    : `${(item as PivotHistory).type} calculation`}
+                    ? `${(item as GoldHistory).quantity || 0} ${translate('grams')} · ${translate('Physical Gold')}`
+                    : `${(item as PivotHistory).type} ${translate('calculation')}`}
                 </div>
                 <div className="mt-1 text-[11px] text-slate-400">
                   {new Date(item.date).toLocaleString()}
@@ -97,12 +99,12 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
                       : fmt((item as PivotHistory).result?.p || 0)}
                   </div>
                   <div className="text-[10px] uppercase font-bold text-slate-400">
-                    {tab === 'gold' ? 'potential profit' : 'pivot point'}
+                    {tab === 'gold' ? translate('potential profit') : translate('pivot point')}
                   </div>
                 </div>
                 <button
                   onClick={() => remove(item.id)}
-                  aria-label="Delete history item"
+                  aria-label={translate('Delete history item')}
                   className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -114,7 +116,7 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
       ) : (
         <div className="rounded-2xl border border-dashed border-slate-200 p-12 text-center text-xs text-slate-400">
           <Clock3 className="mx-auto h-8 w-8 text-slate-300 mb-2" />
-          No history items stored yet.
+          {translate('No history items stored yet.')}
         </div>
       )}
     </div>

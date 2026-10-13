@@ -3,13 +3,15 @@
 import { useState } from 'react'
 import { Calculator, Hourglass, TrendingUp } from 'lucide-react'
 import { formatRupiah, type GoldHistory } from '@/lib/goldcalc-data'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface CalculatorCardProps {
   addGold: (x: GoldHistory) => void
   goldItems: GoldHistory[]
 }
 
-export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) {
+export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
+  const { translate } = useTranslation()
   const [capital, setCapital] = useState('100000000')
   const [buyingPrice, setBuyingPrice] = useState('4000')
   const [sellingPrice, setSellingPrice] = useState('4400')
@@ -104,8 +106,8 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
         <div className="flex flex-col gap-4">
           {/* Capital */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">
-              CAPITAL
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              {translate('CAPITAL')}
             </label>
 
             <div className="relative">
@@ -122,35 +124,43 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
             </div>
           </div>
 
-          {/* Buying + Selling Price */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Buying Price */}
-            <div className="flex min-w-0 flex-col gap-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
-                BUYING PRICE (HB)
-              </label>
+          {/* Buying Price (HB) */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              {translate('BUYING PRICE (HB)')}
+            </label>
+            <input
+              type="number"
+              value={buyingPrice}
+              onChange={(e) => setBuyingPrice(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
+            />
+          </div>
 
-              <input
-                type="number"
-                value={buyingPrice}
-                onChange={(e) => setBuyingPrice(e.target.value)}
-                className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 px-3.5 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
-              />
-            </div>
+          {/* Selling Price (HJ) */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              {translate('SELLING PRICE (HJ)')}
+            </label>
+            <input
+              type="number"
+              value={sellingPrice}
+              onChange={(e) => setSellingPrice(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
+            />
+          </div>
 
-            {/* Selling Price */}
-            <div className="flex min-w-0 flex-col gap-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
-                SELLING PRICE (HJ)
-              </label>
-
-              <input
-                type="number"
-                value={sellingPrice}
-                onChange={(e) => setSellingPrice(e.target.value)}
-                className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 px-3.5 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
-              />
-            </div>
+          {/* Exchange Rate */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              {translate('EXCHANGE RATE')}
+            </label>
+            <input
+              type="number"
+              value={exchangeRate}
+              onChange={(e) => setExchangeRate(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
+            />
           </div>
 
           {/* Exchange Rate + TOZ */}
@@ -158,7 +168,7 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
             {/* Exchange Rate */}
             <div className="flex min-w-0 flex-col gap-1.5">
               <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
-                EXCHANGE RATE
+                {translate('EXCHANGE RATE')}
               </label>
 
               <input
@@ -192,14 +202,14 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
               className="flex h-[42px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#291F6C] to-[#00A9E8] text-sm font-semibold text-white shadow-md shadow-[#291F6C]/10 transition hover:opacity-95 active:scale-[0.99]"
             >
               <Calculator className="h-4 w-4" />
-              <span>Calculate</span>
+              <span>{translate('Calculate')}</span>
             </button>
 
             <button
               onClick={handleReset}
               className="h-[42px] rounded-xl border border-slate-200 bg-white px-5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
             >
-              Reset
+              {translate('Reset')}
             </button>
           </div>
 
@@ -210,7 +220,7 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
             className="flex w-fit items-center gap-1.5 text-xs font-medium text-[#0292e3] transition hover:opacity-80"
           >
             <span className="text-sm">◷</span>
-            <span>Calculation History</span>
+            <span>{translate('Calculation History')}</span>
           </button>
         </div>
       </div>
@@ -223,11 +233,11 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
           {/* Summary Header */}
           <div className="flex items-center justify-between px-1">
             <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">
-              SUMMARY RESULTS
+              {translate('SUMMARY RESULTS')}
             </span>
 
             <span className="text-[10px] font-medium text-slate-400">
-              Updated Just Now
+              {translate('Updated Just Now')}
             </span>
 
 
@@ -237,8 +247,8 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
           {/* Gold Quantity */}
           <div className="relative rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#0292e3]">
-                GOLD QUANTITY
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0292e3]">
+                {translate('GOLD QUANTITY')}
               </span>
 
               <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#00A9E8]/20 bg-[#00A9E8]/10">
@@ -250,62 +260,46 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
               <span className="text-[26px] font-extrabold tracking-tight text-[#291F6C]">
                 {result.quantityGrams}
               </span>
-
-              <span className="text-sm font-semibold text-[#0292e3]">
-                grams
-              </span>
+              <span className="text-sm font-bold text-[#0292e3]">{translate('grams')}</span>
             </div>
           </div>
 
-          {/* Total Buying + Total Selling */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Total Buying */}
-            <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.06em] text-slate-400">
-                TOTAL BUYING PRICE
-              </span>
-
-              <div className="mt-1.5 whitespace-nowrap text-[15px] font-extrabold tracking-tight text-[#291F6C]">
-                {formatRupiah(result.totalBuyingPrice)}
-              </div>
-            </div>
-
-            {/* Total Selling */}
-            <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.06em] text-slate-400">
-                TOTAL SELLING PRICE
-              </span>
-
-              <div className="mt-1.5 whitespace-nowrap text-[15px] font-extrabold tracking-tight text-[#291F6C]">
-                {formatRupiah(result.totalSellingPrice)}
-              </div>
+          {/* Total Buying Price */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              {translate('TOTAL BUYING PRICE')}
+            </span>
+            <div className="mt-1 text-xl font-extrabold text-slate-900">
+              {formatRupiah(result.totalBuyingPrice)}
             </div>
           </div>
 
-          {/* Price Difference */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-[0.07em] text-slate-400">
-                PRICE DIFFERENCE (SPREAD)
-              </span>
-
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100">
-                <span className="text-[11px] font-bold text-slate-400">
-                  i
-                </span>
-              </div>
+          {/* Total Selling Price */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              {translate('TOTAL SELLING PRICE')}
+            </span>
+            <div className="mt-1 text-xl font-extrabold text-slate-900">
+              {formatRupiah(result.totalSellingPrice)}
             </div>
+          </div>
 
-            <div className="mt-1 text-[17px] font-extrabold tracking-tight text-[#0292e3]">
-              {formatRupiah(result.spreadPerGram)}
+          {/* Price Difference (Spread) */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              {translate('PRICE DIFFERENCE (SPREAD)')}
+            </span>
+            <div className="mt-1 flex items-baseline gap-1 text-xl font-extrabold text-[#0292e3]">
+              <span>{formatRupiah(result.spreadPerGram)}</span>
+              <span className="text-xs font-normal text-slate-500">/g</span>
             </div>
           </div>
 
           {/* Potential Profit */}
           <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-cyan-50/60 p-4 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-[0.07em] text-emerald-700">
-                POTENTIAL PROFIT
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#241e52]">
+                {translate('POTENTIAL PROFIT')}
               </span>
 
               <span className="rounded-full bg-emerald-500 px-3 py-1 text-[10px] font-bold text-white">
@@ -334,11 +328,11 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
       <div className="flex items-start justify-between border-b border-slate-100 px-5 py-4">
         <div>
           <h2 className="text-lg font-bold text-slate-900">
-            Calculation History
+            {translate('Calculation History')}
           </h2>
 
           <p className="mt-0.5 text-xs text-slate-500">
-            Physical Gold Calculator
+            {translate('Physical Gold Calculator')}
           </p>
         </div>
 
@@ -357,11 +351,11 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
         {goldItems.length === 0 ? (
           <div className="py-12 text-center">
             <p className="text-sm font-medium text-slate-500">
-              No calculation history yet.
+              {translate('No calculation history yet.')}
             </p>
 
             <p className="mt-1 text-xs text-slate-400">
-              Your calculations will appear here.
+              {translate('Your calculations will appear here.')}
             </p>
           </div>
         ) : (
@@ -379,7 +373,7 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
                 {/* Capital */}
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-slate-500">
-                    Capital
+                    {translate('CAPITAL')}
                   </span>
 
                   <span className="text-sm font-bold text-slate-900">
@@ -413,18 +407,18 @@ export function CalculatorCard({ addGold, goldItems=[], }: CalculatorCardProps) 
                 {/* Gold Quantity */}
                 <div className="mt-3 flex items-center justify-between">
                   <span className="text-xs font-medium text-slate-500">
-                    Gold Quantity
+                    {translate('GOLD QUANTITY')}
                   </span>
 
                   <span className="text-sm font-semibold text-slate-800">
-                    {item.quantity.toFixed(2)} grams
+                    {item.quantity.toFixed(2)} {translate('grams')}
                   </span>
                 </div>
 
                 {/* Potential Profit */}
                 <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3">
                   <span className="text-xs font-medium text-slate-500">
-                    Potential Profit
+                    {translate('POTENTIAL PROFIT')}
                   </span>
 
                   <div className="flex items-center gap-2">

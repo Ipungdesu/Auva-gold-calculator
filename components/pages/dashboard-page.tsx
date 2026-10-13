@@ -8,33 +8,36 @@ import { ChartCard } from '@/components/goldcalc/chart-card'
 import { NewsCard } from '@/components/goldcalc/news-card'
 import { PivotLevelCard } from '@/components/goldcalc/pivot-level-card'
 import { goldPrice, marketSeries, money, news, defaultPivot, type NewsItem } from '@/lib/goldcalc-data'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface DashboardPageProps {
   showNews: (n: NewsItem) => void
 }
 
 export function DashboardPage({ showNews }: DashboardPageProps) {
+  const { translate } = useTranslation()
+
   return (
     <>
       <PageHeader
-        eyebrow="Executive view"
-        title="Market intelligence"
-        description="A concise view of the market, technical levels, and latest fundamental context."
+        eyebrow={translate('Executive view')}
+        title={translate('Market intelligence')}
+        description={translate('A concise view of the market, technical levels, and latest fundamental context.')}
       />
 
       <div className="flex flex-col gap-6 p-5 sm:p-8 lg:p-10">
         {/* KPIs */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
-            label="Current price"
+            label={translate('Current price')}
             value={money(goldPrice.price)}
             change={`+${goldPrice.change}%`}
             icon={CircleDollarSign}
           />
-          <KpiCard label="Day high" value={money(goldPrice.high)} />
-          <KpiCard label="Day low" value={money(goldPrice.low)} />
+          <KpiCard label={translate('Day high')} value={money(goldPrice.high)} />
+          <KpiCard label={translate('Day low')} value={money(goldPrice.low)} />
           <KpiCard
-            label="Average price"
+            label={translate('Average price')}
             value={money(
               (goldPrice.high + goldPrice.low + goldPrice.open + goldPrice.close) / 4
             )}
@@ -45,8 +48,8 @@ export function DashboardPage({ showNews }: DashboardPageProps) {
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <Card>
             <CardHeader>
-              <CardTitle>Price trend</CardTitle>
-              <CardDescription>90-day mock historical price</CardDescription>
+              <CardTitle>{translate('Price trend')}</CardTitle>
+              <CardDescription>{translate('90-day mock historical price')}</CardDescription>
             </CardHeader>
             <CardContent>
               <ChartCard series={marketSeries['3M']} height={300} />
@@ -55,8 +58,8 @@ export function DashboardPage({ showNews }: DashboardPageProps) {
 
           <Card>
             <CardHeader>
-              <CardTitle>Technical snapshot</CardTitle>
-              <CardDescription>Classic daily pivot levels</CardDescription>
+              <CardTitle>{translate('Technical snapshot')}</CardTitle>
+              <CardDescription>{translate('Classic daily pivot levels')}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               {(
@@ -94,9 +97,9 @@ export function DashboardPage({ showNews }: DashboardPageProps) {
         {/* News */}
         <Card>
           <CardHeader>
-            <CardTitle>Latest fundamental context</CardTitle>
+            <CardTitle>{translate('Latest fundamental context')}</CardTitle>
             <CardDescription>
-              Informational market coverage, without predictions or recommendations.
+              {translate('Informational market coverage, without predictions or recommendations.')}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 md:grid-cols-3">

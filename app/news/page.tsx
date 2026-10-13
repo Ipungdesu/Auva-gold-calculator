@@ -34,15 +34,6 @@ export default async function NewsRoutePage() {
       <AppHeader />
 
       <main className="mx-auto max-w-md px-4 pb-24 pt-5 sm:max-w-xl sm:px-6 lg:max-w-5xl lg:px-8">
-        <header className="mb-6">
-          <h1 className="text-[2.7rem] font-black leading-[0.98] tracking-[-0.06em] text-slate-900 sm:text-[4rem]">
-            Fundamental News
-          </h1>
-          <p className="mt-3 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
-            Stay informed with important news related to global financial markets.
-          </p>
-        </header>
-
         <NewsFeed initialArticles={initialArticles} />
       </main>
 

@@ -15,6 +15,7 @@ import {
   CalendarDays,
 } from 'lucide-react'
 import { AppHeader } from '@/components/goldcalc/app-header'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface NestCalculatorPageProps {
   symbol: string
@@ -77,28 +78,28 @@ function formatMoney(value: number) {
   }).format(value)
 }
 
-function formatDate(dateString: string) {
+function formatDate(dateString: string, lang: 'id' | 'en') {
   const date = new Date(dateString)
 
   if (Number.isNaN(date.getTime())) {
     return dateString
   }
 
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   })
 }
 
-function formatShortDate(dateString: string) {
+function formatShortDate(dateString: string, lang: 'id' | 'en') {
   const date = new Date(dateString)
 
   if (Number.isNaN(date.getTime())) {
     return dateString
   }
 
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {
     month: 'short',
     day: 'numeric',
   })
@@ -108,6 +109,7 @@ export default function NestCalculatorPage({
   symbol,
 }: NestCalculatorPageProps) {
   const theme = getTheme(symbol)
+  const { lang, translate } = useTranslation()
 
   // =========================================================
   // STEP 7 — STATE DATA HISTORIS
@@ -251,11 +253,11 @@ export default function NestCalculatorPage({
 
   const signalLabel =
     signal === 'BUY'
-      ? 'Bullish Bias'
+      ? translate('Bullish Bias')
       : signal === 'SELL'
-        ? 'Bearish Bias'
+        ? translate('Bearish Bias')
         : signal === 'NEUTRAL'
-          ? 'Neutral'
+          ? translate('Neutral')
           : ''
 
   return (
@@ -264,15 +266,7 @@ export default function NestCalculatorPage({
           HEADER
       ===================================================== */}
 
-      <AppHeader
-        backHref="/pivot/nest"
-        rightElement={
-          <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold text-[#172554]">
-            <span className="h-2 w-2 rounded-full bg-[#0292e3]" />
-            Live XAUUSD
-          </div>
-        }
-      />
+      <AppHeader backHref="/pivot/nest" />
 
       {/* =====================================================
           MAIN
@@ -287,16 +281,15 @@ export default function NestCalculatorPage({
             style={{ color: theme.color }}
           >
             <TrendingUp className="h-4 w-4" />
-            {theme.label}
+            {translate(theme.label)}
           </div>
 
           <h1 className="text-[30px] font-extrabold leading-tight tracking-tight text-slate-900">
-            NEST Calculator
+            {translate('NEST Calculator')}
           </h1>
 
           <p className="mt-1 text-sm leading-5 text-slate-500">
-            Konsep transaksi yang menggunakan perbandingan harga pembukaan hari ini dengan harga penutupan sesi sebelumnya 
-            untuk menentukan bias arah transaksi.
+            {translate('NEST transaction concept')}
           </p>
         </div>
 
@@ -313,12 +306,12 @@ export default function NestCalculatorPage({
               />
 
               <span className="text-base font-bold text-slate-800">
-                Calculate Data
+                {translate('Calculate Data')}
               </span>
             </div>
 
             <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium text-slate-600">
-              Daily Timeframe
+              {translate('Daily Timeframe')}
             </span>
           </div>
 
@@ -327,7 +320,7 @@ export default function NestCalculatorPage({
           <div className="mt-3 grid grid-cols-2 gap-2.5">
             <div className="rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
               <span className="text-[10px] font-bold tracking-wider text-slate-500">
-                OPEN
+                {translate('OPEN')}
               </span>
 
               <div className="mt-1 text-base font-extrabold text-[#1e1b4b]">
@@ -339,7 +332,7 @@ export default function NestCalculatorPage({
 
             <div className="rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
               <span className="text-[10px] font-bold tracking-wider text-slate-500">
-                CLOSE
+                {translate('CLOSE')}
               </span>
 
               <div className="mt-1 text-base font-extrabold text-[#1e1b4b]">
@@ -354,7 +347,7 @@ export default function NestCalculatorPage({
 
 <div className="mt-2.5 rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
   <label className="text-[10px] font-bold tracking-wider text-slate-500">
-    OPEN TODAY
+    {translate('OPEN TODAY')}
   </label>
 
   <input
@@ -368,7 +361,7 @@ export default function NestCalculatorPage({
       setOpenToday(value)
     }
   }}
-  placeholder="Enter today's open"
+  placeholder={translate("Enter today's open")}
   className="mt-1 w-full bg-transparent text-base font-extrabold text-[#1e1b4b] outline-none placeholder:text-slate-300"
 />
 </div>
@@ -389,14 +382,14 @@ export default function NestCalculatorPage({
             }}
           >
             <Smartphone className="h-4 w-4" />
-            Calculate
+            {translate('Calculate')}
           </button>
 
           
         </section>
 
         {/* ===================================================
-            MARKET SIGNAL
+            {translate('MARKET SIGNAL')}
             HANYA MUNCUL SETELAH CALCULATE
         =================================================== */}
 
@@ -430,7 +423,7 @@ export default function NestCalculatorPage({
   {/* DIRECTIONAL CALL */}
   <div>
     <span className="block text-[10px] font-bold tracking-wider text-slate-500">
-      DIRECTIONAL CALL
+      {translate('DIRECTIONAL CALL')}
     </span>
 
     <div
@@ -443,25 +436,25 @@ export default function NestCalculatorPage({
       }`}
     >
       {signal === 'BUY'
-        ? '↑ BUY'
+        ? `↑ ${translate('BUY')}`
         : signal === 'SELL'
-          ? '↓ SELL'
-          : '— NEUTRAL'}
+          ? `↓ ${translate('SELL')}`
+          : `— ${translate('NEUTRAL')}`}
     </div>
   </div>
 
   {/* PRICE POSITION */}
   <div className="text-right">
     <span className="block text-[10px] font-bold tracking-wider text-slate-500">
-      PRICE POSITION
+      {translate('PRICE POSITION')}
     </span>
 
     <div className="mt-2 text-base font-extrabold text-[#312e81]">
       {signal === 'BUY'
-        ? 'Below Close'
+        ? translate('Below Close')
         : signal === 'SELL'
-          ? 'Above Close'
-          : 'At Close'}
+          ? translate('Above Close')
+          : translate('At Close')}
     </div>
 
     <div className="text-xs font-semibold text-slate-400">
@@ -481,8 +474,8 @@ export default function NestCalculatorPage({
                   color: '#334155',
                 }}
               >
-                <span className="font-semibold">Condition: </span>
-                {conditionText}
+                <span className="font-semibold">{translate('Condition:')} </span>
+                {translate(conditionText)}
               </div>
             </div>
           </section>
@@ -496,18 +489,18 @@ export default function NestCalculatorPage({
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-base font-extrabold text-slate-800">
-                Historical Data Applied
+                {translate('Historical Data Applied')}
               </h2>
 
               <p className="mt-1 text-xs text-slate-400">
-                Timeframe: Daily
+                {translate('Timeframe: Daily')}
               </p>
             </div>
 
             {selectedDate && (
               <div className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-bold text-slate-600">
                 <CalendarDays className="h-3.5 w-3.5" />
-                {formatDate(selectedDate)}
+                {formatDate(selectedDate, lang)}
               </div>
             )}
           </div>
@@ -515,11 +508,11 @@ export default function NestCalculatorPage({
           <div className="mt-3 border-t border-slate-100 pt-3">
             {loadingHistory ? (
               <div className="py-8 text-center text-xs text-slate-400">
-                Loading historical data...
+                {translate('Loading historical data...')}
               </div>
             ) : historicalData.length === 0 ? (
               <div className="py-8 text-center text-xs text-slate-400">
-                No historical data available.
+                {translate('No historical data available.')}
               </div>
             ) : (
               <div className="overflow-hidden rounded-xl border border-slate-200">
@@ -527,19 +520,19 @@ export default function NestCalculatorPage({
                   <thead>
                     <tr className="bg-[#f5f7fb] text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       <th className="px-2.5 py-3 text-left">
-                        DATE
+                        {translate('DATE')}
                       </th>
 
                       <th className="px-2 py-3 text-right">
-                        OPEN
+                        {translate('OPEN')}
                       </th>
 
                       <th className="px-2 py-3 text-right">
-                        CLOSE
+                        {translate('CLOSE')}
                       </th>
 
                       <th className="px-2 py-3 text-center">
-                        ACTION
+                        {translate('ACTION')}
                       </th>
                     </tr>
                   </thead>
@@ -564,7 +557,7 @@ export default function NestCalculatorPage({
                         >
                           <td className="px-2.5 py-3 font-medium text-slate-600">
                             <div className="whitespace-nowrap">
-                              {formatShortDate(item.date)}
+                              {formatShortDate(item.date, lang)}
                             </div>
 
                             {isSelected && (
@@ -572,7 +565,7 @@ export default function NestCalculatorPage({
                                 className="mt-0.5 inline-block text-[8px] font-bold uppercase"
                                 style={{ color: theme.color }}
                               >
-                                Market Data Used
+                                {translate('MARKET DATA USED')}
                               </span>
                             )}
                           </td>
@@ -596,8 +589,8 @@ export default function NestCalculatorPage({
                               }}
                             >
                               {isSelected
-                                ? 'Selected'
-                                : 'Use this'}
+                                ? translate('Selected')
+                                : translate('Use this')}
                             </button>
                           </td>
                         </tr>
@@ -623,7 +616,7 @@ export default function NestCalculatorPage({
           }}
         >
           <RotateCcw className="h-4 w-4" />
-          New Calculation
+          {translate('New Calculation')}
         </button>
       </main>
 
@@ -638,7 +631,7 @@ export default function NestCalculatorPage({
         >
           <Home className="h-5 w-5" />
           <span className="text-[11px] font-bold tracking-wider">
-            HOME
+            {translate('HOME')}
           </span>
         </Link>
 
@@ -648,7 +641,7 @@ export default function NestCalculatorPage({
         >
           <Banknote className="h-5 w-5" />
           <span className="text-[11px] font-bold tracking-wider">
-            GOLD
+            {translate('GOLD')}
           </span>
         </Link>
 
@@ -658,7 +651,7 @@ export default function NestCalculatorPage({
         >
           <TrendingUp className="h-5 w-5" />
           <span className="text-[11px] font-bold tracking-wider">
-            METHOD
+            {translate('PIVOT')}
           </span>
         </Link>
 
@@ -668,7 +661,7 @@ export default function NestCalculatorPage({
         >
           <Newspaper className="h-5 w-5" />
           <span className="text-[11px] font-bold tracking-wider">
-            NEWS
+            {translate('NEWS')}
           </span>
         </Link>
       </nav>

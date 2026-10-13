@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Home, Banknote, TrendingUp, Newspaper } from 'lucide-react'
 import type { Dispatch, SetStateAction } from 'react'
 import type { Page } from './sidebar-navigation'
+import { useTranslation } from '@/lib/LanguageContext'
 
 export interface BottomNavigationProps {
   /** Optional: overrides path-based active detection (used by / SPA only) */
@@ -21,6 +22,7 @@ const items = [
 ]
 
 export function BottomNavigation({ page }: BottomNavigationProps) {
+  const { translate } = useTranslation()
   const pathname = usePathname()
   const currentPath = page ? `/${page}` : pathname
 
@@ -42,7 +44,7 @@ export function BottomNavigation({ page }: BottomNavigationProps) {
           >
             <Icon className={`h-5 w-5 ${isActive ? 'text-[#0292e3]' : 'text-slate-400'}`} />
             <span className={`text-[11px] font-bold tracking-wider ${isActive ? 'text-[#0292e3]' : 'text-slate-400'}`}>
-              {item.label}
+              {translate(item.label)}
             </span>
           </Link>
         )
