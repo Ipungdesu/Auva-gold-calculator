@@ -12,11 +12,11 @@ interface CalculatorCardProps {
 
 export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
   const { translate } = useTranslation()
-  const [capital, setCapital] = useState('100000000')
-  const [buyingPrice, setBuyingPrice] = useState('4000')
-  const [sellingPrice, setSellingPrice] = useState('4400')
-  const [exchangeRate, setExchangeRate] = useState('18000')
-  const [toz, setToz] = useState('31.103')
+  const [capital, setCapital] = useState('')
+  const [buyingPrice, setBuyingPrice] = useState('')
+  const [sellingPrice, setSellingPrice] = useState('')
+  const [exchangeRate, setExchangeRate] = useState('')
+  const [toz, setToz] = useState('')
   const [showHistory, setShowHistory] = useState(false)
 
   const [result, setResult] = useState<{
@@ -26,14 +26,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
     spreadPerGram: number
     profit: number
     profitPercent: number
-  } | null>({
-    quantityGrams: 86.95,
-    totalBuyingPrice: 99992500,
-    totalSellingPrice: 102601000,
-    spreadPerGram: 30000,
-    profit: 2608500,
-    profitPercent: 2.61,
-  })
+  } | null>(null)
 
   function calculate() {
     const cap = parseFloat(capital) || 0
@@ -90,11 +83,12 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
   }
 
   function handleReset() {
-    setCapital('100000000')
-    setBuyingPrice('4000')
-    setSellingPrice('4400')
-    setExchangeRate('18000')
-    setToz('31.103')
+    setCapital('')
+    setBuyingPrice('')
+    setSellingPrice('')
+    setExchangeRate('')
+    setToz('')
+    setResult(null)
   }
 
   return (
@@ -118,6 +112,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
               <input
                 type="number"
                 value={capital}
+                placeholder="0"
                 onChange={(e) => setCapital(e.target.value)}
                 className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 py-2.5 pl-10 pr-4 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
               />
@@ -132,6 +127,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
             <input
               type="number"
               value={buyingPrice}
+              placeholder="0"
               onChange={(e) => setBuyingPrice(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
             />
@@ -145,6 +141,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
             <input
               type="number"
               value={sellingPrice}
+              placeholder="0"
               onChange={(e) => setSellingPrice(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
             />
@@ -158,6 +155,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
             <input
               type="number"
               value={exchangeRate}
+              placeholder="0"
               onChange={(e) => setExchangeRate(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
             />
@@ -174,6 +172,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
               <input
                 type="number"
                 value={exchangeRate}
+                placeholder="0"
                 onChange={(e) => setExchangeRate(e.target.value)}
                 className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 px-3.5 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
               />
@@ -189,6 +188,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
                 type="number"
                 step="0.001"
                 value={toz}
+                placeholder="0"
                 onChange={(e) => setToz(e.target.value)}
                 className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 px-3.5 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
               />
