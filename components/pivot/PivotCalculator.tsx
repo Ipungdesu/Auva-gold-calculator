@@ -354,15 +354,13 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
   const [high, setHigh] = useState(String(primary.high))
   const [low, setLow] = useState(String(primary.low))
   const [close, setClose] = useState(String(primary.close))
-  const [openToday, setOpenToday] = useState(String(primary.open))
+  const [openToday, setOpenToday] = useState('')
 
   // Calculated pivot levels (null = not yet calculated)
   const [levels, setLevels] = useState<ReturnType<typeof calculatePivotLevels> | null>(
-    initialData.length > 0 ? calculatePivotLevels(primary) : null,
+    null,
   )
-  const [calcOpenToday, setCalcOpenToday] = useState<number | null>(
-    initialData.length > 0 ? primary.open : null,
-  )
+  const [calcOpenToday, setCalcOpenToday] = useState<number | null>(null)
 
   const handleCalculate = useCallback(() => {
     const o = parseFloat(open)
@@ -370,7 +368,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
     const l = parseFloat(low)
     const c = parseFloat(close)
     const ot = parseFloat(openToday)
-    if ([o, h, l, c, ot].some(isNaN)) return
+    if ([o, h, l, c, ot].some((value) => !Number.isFinite(value) || value <= 0)) return
 
     setLevels(calculatePivotLevels({ open: o, high: h, low: l, close: c }))
     setCalcOpenToday(ot)
@@ -381,9 +379,9 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
     setHigh(String(row.high))
     setLow(String(row.low))
     setClose(String(row.close))
-    setOpenToday(String(row.open))
-    setLevels(calculatePivotLevels(row))
-    setCalcOpenToday(row.open)
+    setOpenToday('')
+    setLevels(null)
+    setCalcOpenToday(null)
   }, [])
 
   const handleReset = useCallback(() => {
@@ -391,7 +389,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
     setHigh(String(primary.high))
     setLow(String(primary.low))
     setClose(String(primary.close))
-    setOpenToday(String(primary.open))
+    setOpenToday('')
     setLevels(null)
     setCalcOpenToday(null)
   }, [primary])
@@ -492,12 +490,13 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
           {/* Open Today — full width, purely manual */}
           <div className="mt-3 flex flex-col gap-1">
             <label htmlFor="field-open-today" className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              {translate('REFERENCE OPEN')}
+              {translate('OPEN TODAY')}
             </label>
             <input
               id="field-open-today"
               type="number"
               value={openToday}
+              placeholder="0"
               onChange={(e) => setOpenToday(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-bold text-slate-900 focus:border-[#0292e3] focus:outline-none focus:ring-2 focus:ring-[#0292e3]/20 transition-colors"
             />
