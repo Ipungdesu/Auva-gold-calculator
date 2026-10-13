@@ -77,13 +77,6 @@ export function HomeNewsSection() {
           </span>
         </div>
 
-        <Link
-          href="/news"
-          className="flex items-center gap-1 text-xs font-bold text-[#0292e3] transition-colors hover:text-[#0e3d7a] hover:underline"
-        >
-          <span>{t.viewAllNews}</span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
       </div>
 
       {/* News Card Container */}

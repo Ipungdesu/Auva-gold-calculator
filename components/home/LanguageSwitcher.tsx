@@ -8,6 +8,7 @@ export function LanguageSwitcher() {
   return (
     <div className="flex items-center rounded-lg border border-slate-200 bg-slate-50/80 p-0.5">
       <button
+        type="button"
         onClick={() => setLang('id')}
         className={`rounded-md px-2.5 py-1 text-[11px] font-bold tracking-wide transition-all ${
           lang === 'id'
@@ -15,10 +16,12 @@ export function LanguageSwitcher() {
             : 'text-slate-500 hover:text-slate-700'
         }`}
         aria-label="Bahasa Indonesia"
+        aria-pressed={lang === 'id'}
       >
         ID
       </button>
       <button
+        type="button"
         onClick={() => setLang('en')}
         className={`rounded-md px-2.5 py-1 text-[11px] font-bold tracking-wide transition-all ${
           lang === 'en'
@@ -26,6 +29,7 @@ export function LanguageSwitcher() {
             : 'text-slate-500 hover:text-slate-700'
         }`}
         aria-label="English"
+        aria-pressed={lang === 'en'}
       >
         EN
       </button>

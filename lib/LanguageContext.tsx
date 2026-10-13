@@ -7,12 +7,14 @@ interface LanguageContextType {
   lang: Language
   setLang: (lang: Language) => void
   t: Translations
+  translate: (text: string) => string
 }
 
 const LanguageContext = createContext<LanguageContextType>({
   lang: 'id',
   setLang: () => {},
   t: translations.id,
+  translate: (text) => text,
 })
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -27,6 +29,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setMounted(true)
   }, [])
 
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
+
   const setLang = (l: Language) => {
     setLangState(l)
     localStorage.setItem('auva-lang', l)
@@ -34,9 +40,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   // Use default 'id' until hydrated to prevent mismatch
   const currentLang = mounted ? lang : 'id'
+  const translate = (text: string) => translations[currentLang].content[text] ?? text
 
   return (
-    <LanguageContext.Provider value={{ lang: currentLang, setLang, t: translations[currentLang] }}>
+    <LanguageContext.Provider
+      value={{ lang: currentLang, setLang, t: translations[currentLang], translate }}
+    >
       {children}
     </LanguageContext.Provider>
   )

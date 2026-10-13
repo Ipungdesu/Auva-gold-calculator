@@ -9,23 +9,25 @@ import { KpiCard } from '@/components/goldcalc/kpi-card'
 import { ChartCard } from '@/components/goldcalc/chart-card'
 import { goldPrice, marketSeries, money } from '@/lib/goldcalc-data'
 import type { Page } from '@/components/goldcalc/sidebar-navigation'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface MarketPageProps {
   setPage: (p: Page) => void
 }
 
 export function MarketPage({ setPage }: MarketPageProps) {
+  const { translate } = useTranslation()
   const [range, setRange] = useState<keyof typeof marketSeries>('1M')
 
   return (
     <>
       <PageHeader
-        eyebrow="Market"
-        title="Gold market"
-        description="Track the XAUUSD spot market with clean, focused price context."
+        eyebrow={translate('Market')}
+        title={translate('Gold market')}
+        description={translate('Track the XAUUSD spot market with clean, focused price context.')}
         action={
           <Button onClick={() => setPage('dashboard')} variant="outline">
-            Open executive dashboard <ChevronRight data-icon="inline-end" />
+            {translate('Open executive dashboard')} <ChevronRight data-icon="inline-end" />
           </Button>
         }
       />
@@ -33,22 +35,22 @@ export function MarketPage({ setPage }: MarketPageProps) {
       <div className="flex flex-col gap-6 p-5 sm:p-8 lg:p-10">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
-            label="Current price"
+            label={translate('Current price')}
             value={money(goldPrice.price)}
-            change={`+${goldPrice.change}% today`}
+            change={`+${goldPrice.change}% ${translate('today')}`}
             icon={CircleDollarSign}
           />
-          <KpiCard label="Day high" value={money(goldPrice.high)} muted="Session high" />
-          <KpiCard label="Day low" value={money(goldPrice.low)} muted="Session low" />
-          <KpiCard label="Opening price" value={money(goldPrice.open)} muted="Session open" />
+          <KpiCard label={translate('Day high')} value={money(goldPrice.high)} muted={translate('Session high')} />
+          <KpiCard label={translate('Day low')} value={money(goldPrice.low)} muted={translate('Session low')} />
+          <KpiCard label={translate('Opening price')} value={money(goldPrice.open)} muted={translate('Session open')} />
         </div>
 
         <Card>
           <CardHeader className="flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <CardTitle>XAUUSD price chart</CardTitle>
+              <CardTitle>{translate('XAUUSD price chart')}</CardTitle>
               <CardDescription>
-                Mock historical series · Updated {goldPrice.updated}
+                {translate('Mock historical series · Updated')} {goldPrice.updated}
               </CardDescription>
             </div>
             <div className="flex rounded-md border bg-muted p-0.5">

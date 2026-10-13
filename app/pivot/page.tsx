@@ -1,40 +1,9 @@
-import Link from 'next/link'
-import { INSTRUMENTS } from '@/lib/instrument-config'
-import { Home, Banknote, TrendingUp, Newspaper } from 'lucide-react'
-import { AppHeader } from '@/components/goldcalc/app-header'
+import { PivotLandingPage as PivotLandingContent } from '@/components/pages/pivot-landing-page'
 
 export const metadata = {
   title: 'Digital Pivot Point — AUVA',
   description:
     'Calculate Classic Pivot Point using historical data or manual OHLC input for Gold, Hangseng, and Nikkei.',
-}
-
-// ── Card icons (SVG) per instrument ─────────────────────────────────────────
-const ICONS: Record<string, React.ReactNode> = {
-  gold: (
-    <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">
-      <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.25)" />
-      <text x="20" y="26" textAnchor="middle" fontSize="18" fill="white" fontWeight="bold">
-        ✦
-      </text>
-    </svg>
-  ),
-  hangseng: (
-    <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">
-      <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.25)" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="white" fontWeight="bold">
-        韓
-      </text>
-    </svg>
-  ),
-  nikkei: (
-    <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">
-      <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.25)" />
-      <text x="20" y="26" textAnchor="middle" fontSize="13" fill="white" fontWeight="bold">
-        225
-      </text>
-    </svg>
-  ),
 }
 
 export default function PivotLandingPage() {

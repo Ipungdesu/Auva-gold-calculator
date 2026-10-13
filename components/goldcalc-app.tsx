@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { LanguageProvider } from '@/lib/LanguageContext'
 import { AppHeader } from '@/components/goldcalc/app-header'
 import { SidebarNavigation, type Page } from '@/components/goldcalc/sidebar-navigation'
 import { BottomNavigation } from '@/components/goldcalc/bottom-navigation'
@@ -67,8 +66,7 @@ export default function GoldCalcApp() {
   })()
 
   return (
-    <LanguageProvider>
-      <div className="min-h-screen bg-[#f4f7fb] text-slate-900 font-sans antialiased">
+    <div className="min-h-screen bg-[#f4f7fb] text-slate-900 font-sans antialiased">
         {/* Desktop Sidebar Navigation */}
         <SidebarNavigation page={page} setPage={setPage} />
 
@@ -125,7 +123,6 @@ export default function GoldCalcApp() {
             </div>
           </div>
         )}
-      </div>
-    </LanguageProvider>
+    </div>
   )
 }
