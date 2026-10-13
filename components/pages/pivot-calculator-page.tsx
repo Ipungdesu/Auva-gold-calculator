@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import {
   Sparkles,
@@ -412,8 +413,6 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
               <span>{translate(computedSignal.conditionText)}</span>
             </div>
           </div>
-        ))}
-      </div>
 
           {/* Card 3: Calculated Pivot Levels (Matching Attached Image) */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -554,8 +553,10 @@ export function PivotCalculatorPage({ addPivot }: PivotCalculatorPageProps) {
             NEST
           </Link>
 
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   )

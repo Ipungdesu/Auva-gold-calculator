@@ -65,7 +65,7 @@ export function PivotLandingPage({ mode = 'pivot' }: { mode?: 'pivot' | 'nest' }
               <div className="pointer-events-none absolute -right-2 bottom-4 h-20 w-20 rounded-full bg-white/10" />
               <div className="mb-3">{icons[slug] ?? null}</div>
               <h2 className="text-base font-extrabold uppercase tracking-wider text-white">
-                {config.label}
+                {translate(config.label)}
               </h2>
               <p className="mt-1 text-xs leading-relaxed text-white/80">
                 {translate(config.subtitle)}

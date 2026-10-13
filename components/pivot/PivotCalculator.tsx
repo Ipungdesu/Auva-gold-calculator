@@ -7,7 +7,6 @@ import {
   Calculator,
   RefreshCw,
   SlidersHorizontal,
-  Clock3,
   CalendarDays,
   Share2,
   Home,
@@ -44,9 +43,9 @@ const fmtMoney = (n: number) =>
     maximumFractionDigits: 2,
   }).format(n)
 
-const fmtDate = (d: string) => {
+const fmtDate = (d: string, lang: 'id' | 'en') => {
   try {
-    return new Date(d).toLocaleDateString('en-US', {
+    return new Date(d).toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -56,9 +55,9 @@ const fmtDate = (d: string) => {
   }
 }
 
-const fmtShortDate = (d: string) => {
+const fmtShortDate = (d: string, lang: 'id' | 'en') => {
   try {
-    return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    return new Date(d).toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', { month: 'short', day: 'numeric' })
   } catch {
     return d
   }
@@ -347,7 +346,7 @@ async function sharePivotImage(
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
-  const { translate } = useTranslation()
+  const { translate, lang } = useTranslation()
   const primary = initialData[0] ?? { open: 0, high: 0, low: 0, close: 0, date: '', symbol: '' }
 
   // Form state — editable overrides (prefilled from latest DB row)
@@ -513,15 +512,6 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
             <Calculator className="h-4 w-4" />
             <span>{translate('Calculate')}</span>
           </button>
-          <button
-            type="button"
-            onClick={() => initialData[0] && handleUseHistoricalData(initialData[0])}
-            className="mt-4 ml-auto flex items-center gap-1.5 text-xs font-bold transition-colors hover:opacity-75"
-            style={{ color: config.accentColor }}
-          >
-            <Clock3 className="h-3.5 w-3.5" />
-            {translate('Calculation History')}
-          </button>
         </div>
 
         {/* ── Market Signal ── */}
@@ -589,7 +579,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
               </div>
               <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">
                 <CalendarDays className="h-3.5 w-3.5" style={{ color: config.accentColor }} />
-                {fmtDate(initialData[0].date)}
+                {fmtDate(initialData[0].date, lang)}
               </div>
             </div>
 
@@ -614,7 +604,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
                     >
                       <td className="py-3 pr-3 pl-1">
                         <div className="flex items-center gap-1.5 whitespace-nowrap">
-                          <span className="font-semibold">{fmtShortDate(row.date)}</span>
+                          <span className="font-semibold">{fmtShortDate(row.date, lang)}</span>
                           {idx === 0 && (
                             <span className="rounded border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide" style={{ color: config.accentColor, borderColor: `${config.accentColor}45`, backgroundColor: `${config.softColor}` }}>
                               {translate('MARKET DATA USED')}

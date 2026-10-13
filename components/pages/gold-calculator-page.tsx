@@ -9,7 +9,7 @@ interface GoldCalculatorPageProps {
   goldItems: GoldHistory[]
 }
 
-export function GoldCalculatorPage({ addGold }: GoldCalculatorPageProps) {
+export function GoldCalculatorPage({ addGold, goldItems }: GoldCalculatorPageProps) {
   const { translate } = useTranslation()
 
   return (

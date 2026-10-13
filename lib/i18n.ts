@@ -270,6 +270,39 @@ export const translations: Record<Language, Translations> = {
       Position: 'Posisi',
       'Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.':
         'A transaction concept for identifying objective price levels calculated from the previous period high, low, and close to determine support and resistance areas.',
+      'HANGSENG Index': 'Indeks HANG SENG',
+      'NIKKEI INDEX': 'INDEKS NIKKEI',
+      'HANG SENG INDEX FORMULA': 'FORMULA INDEKS HANG SENG',
+      'NIKKEI INDEX FORMULA': 'FORMULA INDEKS NIKKEI',
+      'DIGITAL GOLD ANALYSIS': 'ANALISIS EMAS DIGITAL',
+      'HANGSENG INDEX ANALYSIS': 'ANALISIS INDEKS HANG SENG',
+      'NIKKEI INDEX ANALYSIS': 'ANALISIS INDEKS NIKKEI',
+      'NEST Calculator': 'Kalkulator NEST',
+      'NEST transaction concept':
+        'Konsep transaksi yang menggunakan perbandingan harga pembukaan hari ini dengan harga penutupan sesi sebelumnya untuk menentukan bias arah transaksi.',
+      'OPEN TODAY': 'PEMBUKAAN HARI INI',
+      "Enter today's open": 'Masukkan harga pembukaan hari ini',
+      Neutral: 'Netral',
+      BUY: 'BELI',
+      SELL: 'JUAL',
+      NEUTRAL: 'NETRAL',
+      'PRICE POSITION': 'POSISI HARGA',
+      'Below Close': 'Di bawah harga penutupan',
+      'Above Close': 'Di atas harga penutupan',
+      'At Close': 'Sama dengan harga penutupan',
+      "Today's open is above the previous close.":
+        'Harga pembukaan hari ini berada di atas harga penutupan sebelumnya.',
+      "Today's open is below the previous close.":
+        'Harga pembukaan hari ini berada di bawah harga penutupan sebelumnya.',
+      "Today's open is equal to the previous close.":
+        'Harga pembukaan hari ini sama dengan harga penutupan sebelumnya.',
+      'Loading historical data...': 'Memuat data historis...',
+      'No historical data available.': 'Data historis tidak tersedia.',
+      Selected: 'Dipilih',
+      'SUMMARY RESULTS': 'RINGKASAN HASIL',
+      'Updated Just Now': 'Baru saja diperbarui',
+      'No calculation history yet.': 'Belum ada riwayat perhitungan.',
+      'Your calculations will appear here.': 'Perhitungan Anda akan muncul di sini.',
       'Titik Pivot': 'Pivot',
       'berada di atas Open hari ini': 'is above today\'s Open',
       'berada di bawah Open hari ini': 'is below today\'s Open',
@@ -489,6 +522,10 @@ export const translations: Record<Language, Translations> = {
         'Pivot Point = (High + Low + Close) / 3. BUY means the Pivot Point is above the reference open; SELL means it is below the reference open. This is a directional calculation, not a live trading signal.',
       'Data Pasar': 'Market Data',
       'Open, High, Low, dan Close': 'Open, High, Low, and Close',
+      'NEST transaction concept':
+        'A transaction concept that compares the current Open price with the previous Close price to determine directional bias.',
+      'Konsep transaksi yang menggunakan perbandingan harga Open saat ini dengan harga Close sebelumnya untuk menentukan bias arah transaksi.':
+        'A transaction concept that compares the current Open price with the previous Close price to determine directional bias.',
       'Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.':
         'A transaction concept for identifying objective price levels calculated from the previous period high, low, and close to determine support and resistance areas.',
     },
