@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none">
+  <circle cx="48" cy="48" r="46.5" fill="#fff" stroke="#DCCFB5" stroke-width="1.5"/>
+  <path fill="url(#auva-gradient)" fill-rule="evenodd" d="M42 24h12l23 54H63.5l-5.7-14H38.2l-5.7 14H19L42 24Zm1.1 29h10L48 40.7 43.1 53Z" clip-rule="evenodd"/>
+  <defs>
+    <linearGradient id="auva-gradient" x1="48" x2="48" y1="24" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#27206C"/>
+      <stop offset="1" stop-color="#08A9E8"/>
+    </linearGradient>
+  </defs>
+</svg>
