@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { AppHeader } from '@/components/goldcalc/app-header'
 import { SidebarNavigation, type Page } from '@/components/goldcalc/sidebar-navigation'
@@ -14,8 +14,11 @@ import { PivotCalculatorPage } from '@/components/pages/pivot-calculator-page'
 import { DashboardPage } from '@/components/pages/dashboard-page'
 import { useGoldHistory } from '@/components/providers/gold-history-provider' // BARU
 import type { NewsItem, PivotHistory } from '@/lib/goldcalc-data' // GoldHistory dihapus
+import { SplashScreen } from '@/components/SplashScreen'
 
 export default function GoldCalcApp() {
+  const [showSplash, setShowSplash] = useState(true)
+  const handleSplashComplete = useCallback(() => setShowSplash(false), [])
   const [page, setPage] = useState<Page>('home')
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null)
   const { goldItems, setGoldItems, addGold } = useGoldHistory() // BARU (menggantikan useState + addGold lokal)
@@ -64,6 +67,10 @@ export default function GoldCalcApp() {
         return <HomePage setPage={setPage} showNews={setSelectedNews} />
     }
   })()
+
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} />
+  }
 
   return (
     <div className="min-h-screen bg-[#f4f7fb] text-slate-900 font-sans antialiased">
