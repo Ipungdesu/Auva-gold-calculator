@@ -21,7 +21,7 @@ export default function GoldCalcApp() {
   const handleSplashComplete = useCallback(() => setShowSplash(false), [])
   const [page, setPage] = useState<Page>('home')
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null)
-  const { goldItems, setGoldItems, addGold } = useGoldHistory() // BARU (menggantikan useState + addGold lokal)
+  const { goldItems, setGoldItems, addGold, loadGoldCalculation } = useGoldHistory()
   const [pivotItems, setPivotItems] = useState<PivotHistory[]>([])
 
   // Hydrate from localStorage (Pivot saja — Gold kini di GoldHistoryProvider)
@@ -61,6 +61,10 @@ export default function GoldCalcApp() {
             pivotItems={pivotItems}
             setGoldItems={setGoldItems}
             setPivotItems={setPivotItems}
+            onUseGold={(item) => {
+              loadGoldCalculation(item)
+              setPage('gold')
+            }}
           />
         )
       default:

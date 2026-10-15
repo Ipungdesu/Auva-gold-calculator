@@ -167,6 +167,8 @@ export const translations: Record<Language, Translations> = {
       'Calculation result': 'Hasil perhitungan',
       'New Calculation': 'Perhitungan Baru',
       'Transaction Concept': 'Konsep Transaksi',
+      'Pivot transaction concept':
+        'Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.',
       'Calculate →': 'Hitung →',
       'PIVOT POINT': 'TITIK PIVOT',
       'Physical Gold': 'Emas Fisik',
@@ -438,6 +440,8 @@ export const translations: Record<Language, Translations> = {
       'Hasil perhitungan': 'Calculation result',
       'Perhitungan Baru': 'New Calculation',
       'Konsep Transaksi': 'Transaction Concept',
+      'Pivot transaction concept':
+        'A transaction concept for identifying objective price levels calculated from the previous period high, low, and close to determine support and resistance areas.',
       'Hitung →': 'Calculate →',
       'TITIK PIVOT': 'PIVOT POINT',
       'Emas Fisik': 'Physical Gold',

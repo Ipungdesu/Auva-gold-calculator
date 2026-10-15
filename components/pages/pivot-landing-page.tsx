@@ -36,10 +36,9 @@ const icons: Record<string, React.ReactNode> = {
 export function PivotLandingPage({ mode = 'pivot' }: { mode?: 'pivot' | 'nest' }) {
   const { translate } = useTranslation()
   const instrumentEntries = Object.entries(INSTRUMENTS)
-  const intro =
-    mode === 'pivot'
-      ? 'Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.'
-      : 'Konsep transaksi yang menggunakan perbandingan harga Open saat ini dengan harga Close sebelumnya untuk menentukan bias arah transaksi.'
+  const intro = translate(
+    mode === 'pivot' ? 'Pivot transaction concept' : 'NEST transaction concept',
+  )
 
   return (
     <div className="min-h-screen bg-[#f4f7fb] pb-24 font-sans antialiased text-slate-900">
@@ -50,9 +49,7 @@ export function PivotLandingPage({ mode = 'pivot' }: { mode?: 'pivot' | 'nest' }
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             {translate('Transaction Concept')}
           </h1>
-          <p className="mt-1 text-sm leading-relaxed text-slate-500">
-            {translate(intro)}
-          </p>
+          <p className="mt-1 text-sm leading-relaxed text-slate-500">{intro}</p>
         </div>
 
         <div className="flex flex-col gap-4">

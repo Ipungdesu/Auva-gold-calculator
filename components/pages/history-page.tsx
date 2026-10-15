@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Clock3, Trash2 } from 'lucide-react'
+import { Clock3, RotateCcw, Trash2 } from 'lucide-react'
 import { formatRupiah, money, type GoldHistory, type PivotHistory } from '@/lib/goldcalc-data'
 import { useTranslation } from '@/lib/LanguageContext'
 
@@ -12,9 +12,16 @@ interface HistoryPageProps {
   pivotItems: PivotHistory[]
   setGoldItems: React.Dispatch<React.SetStateAction<GoldHistory[]>>
   setPivotItems: React.Dispatch<React.SetStateAction<PivotHistory[]>>
+  onUseGold: (item: GoldHistory) => void
 }
 
-export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems }: HistoryPageProps) {
+export function HistoryPage({
+  goldItems,
+  pivotItems,
+  setGoldItems,
+  setPivotItems,
+  onUseGold,
+}: HistoryPageProps) {
   const { translate } = useTranslation()
   const [tab, setTab] = useState<'gold' | 'pivot'>('gold')
 
@@ -76,42 +83,56 @@ export function HistoryPage({ goldItems, pivotItems, setGoldItems, setPivotItems
       {/* Items */}
       {items.length ? (
         <div className="flex flex-col gap-3">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <div className="text-sm font-bold text-slate-900">
-                  {tab === 'gold'
-                    ? `${(item as GoldHistory).quantity || 0} ${translate('grams')} · ${translate('Physical Gold')}`
-                    : `${(item as PivotHistory).type} ${translate('calculation')}`}
-                </div>
-                <div className="mt-1 text-[11px] text-slate-400">
-                  {new Date(item.date).toLocaleString()}
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <div className="font-extrabold text-[#0292e3]">
-                    {tab === 'gold'
-                      ? formatRupiah((item as GoldHistory).profit || 0)
-                      : fmt((item as PivotHistory).result?.p || 0)}
+          {items.map((item) => {
+            const goldItem = tab === 'gold' ? (item as GoldHistory) : null
+
+            return (
+              <div
+                key={item.id}
+                className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <div className="text-sm font-bold text-slate-900">
+                    {goldItem
+                      ? `${goldItem.quantity || 0} ${translate('grams')} · ${translate('Physical Gold')}`
+                      : `${(item as PivotHistory).type} ${translate('calculation')}`}
                   </div>
-                  <div className="text-[10px] uppercase font-bold text-slate-400">
-                    {tab === 'gold' ? translate('potential profit') : translate('pivot point')}
+                  <div className="mt-1 text-[11px] text-slate-400">
+                    {new Date(item.date).toLocaleString()}
                   </div>
                 </div>
-                <button
-                  onClick={() => remove(item.id)}
-                  aria-label={translate('Delete history item')}
-                  className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                <div className="flex items-center justify-between gap-3 sm:justify-end">
+                  <div className="text-right">
+                    <div className="font-extrabold text-[#0292e3]">
+                      {goldItem
+                        ? formatRupiah(goldItem.profit || 0)
+                        : fmt((item as PivotHistory).result?.p || 0)}
+                    </div>
+                    <div className="text-[10px] uppercase font-bold text-slate-400">
+                      {goldItem ? translate('potential profit') : translate('pivot point')}
+                    </div>
+                  </div>
+                  {goldItem && (
+                    <button
+                      type="button"
+                      onClick={() => onUseGold(goldItem)}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#0292e3] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#027dc2]"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" />
+                      {translate('Use this')}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => remove(item.id)}
+                    aria-label={translate('Delete history item')}
+                    className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-slate-200 p-12 text-center text-xs text-slate-400">
