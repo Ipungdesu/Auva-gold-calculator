@@ -148,9 +148,12 @@ export default function NestCalculatorPage({
       try {
         setLoadingHistory(true)
 
-        const response = await fetch('/api/nest/historical', {
-          cache: 'no-store',
-        })
+        const response = await fetch(
+          `/api/nest/historical?symbol=${encodeURIComponent(symbol.toLowerCase())}`,
+          {
+            cache: 'no-store',
+          },
+        )
 
         if (!response.ok) {
           throw new Error('Failed to fetch historical data')

@@ -16,13 +16,35 @@ import { useGoldHistory } from '@/components/providers/gold-history-provider' //
 import type { NewsItem, PivotHistory } from '@/lib/goldcalc-data' // GoldHistory dihapus
 import { SplashScreen } from '@/components/SplashScreen'
 
+let hasShownStartupSplash = false
+
 export default function GoldCalcApp() {
-  const [showSplash, setShowSplash] = useState(true)
+  const [showSplash, setShowSplash] = useState(false)
   const handleSplashComplete = useCallback(() => setShowSplash(false), [])
   const [page, setPage] = useState<Page>('home')
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null)
   const { goldItems, setGoldItems, addGold, loadGoldCalculation } = useGoldHistory()
   const [pivotItems, setPivotItems] = useState<PivotHistory[]>([])
+
+  useEffect(() => {
+    if (hasShownStartupSplash) return
+
+    const navigatorWithStandalone = navigator as Navigator & { standalone?: boolean }
+    const isStandalone =
+      (typeof window.matchMedia === 'function' &&
+        window.matchMedia('(display-mode: standalone)').matches) ||
+      navigatorWithStandalone.standalone === true
+    const navigationEntry = performance.getEntriesByType('navigation')[0] as
+      | PerformanceNavigationTiming
+      | undefined
+    const isStartUrl =
+      navigationEntry?.name && new URL(navigationEntry.name).pathname === '/'
+
+    if (isStandalone && navigationEntry?.type === 'navigate' && isStartUrl) {
+      hasShownStartupSplash = true
+      setShowSplash(true)
+    }
+  }, [])
 
   // Hydrate from localStorage (Pivot saja — Gold kini di GoldHistoryProvider)
   useEffect(() => {
