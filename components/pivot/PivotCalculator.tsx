@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -18,6 +18,7 @@ import { calculatePivotLevels, determineSignal } from '@/lib/calculate-pivot'
 import type { InstrumentConfig } from '@/lib/instrument-config'
 import { AppHeader } from '@/components/goldcalc/app-header'
 import { useTranslation } from '@/lib/LanguageContext'
+import { useOnlineStatus } from '@/components/pwa/offline-support'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -347,7 +348,40 @@ async function sharePivotImage(
 
 export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
   const { translate, lang } = useTranslation()
-  const primary = initialData[0] ?? { open: 0, high: 0, low: 0, close: 0, date: '', symbol: '' }
+  const isOnline = useOnlineStatus()
+  const [marketData, setMarketData] = useState(initialData)
+
+  useEffect(() => {
+    const storageKey = `auva-pivot-data:${config.dbSymbol}`
+
+    try {
+      const savedData = localStorage.getItem(storageKey)
+      if (initialData.length > 0) {
+        localStorage.setItem(storageKey, JSON.stringify(initialData))
+      } else if (savedData) {
+        const parsedData: unknown = JSON.parse(savedData)
+        if (
+          Array.isArray(parsedData) &&
+          parsedData.every(
+            (row) =>
+              row &&
+              typeof row.date === 'string' &&
+              typeof row.open === 'number' &&
+              typeof row.high === 'number' &&
+              typeof row.low === 'number' &&
+              typeof row.close === 'number' &&
+              typeof row.symbol === 'string',
+          )
+        ) {
+          setMarketData(parsedData)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to restore Pivot market data from local storage:', error)
+    }
+  }, [config.dbSymbol, initialData])
+
+  const primary = marketData[0] ?? { open: 0, high: 0, low: 0, close: 0, date: '', symbol: '' }
 
   // Form state — editable overrides (prefilled from latest DB row)
   const [open, setOpen] = useState(String(primary.open))
@@ -361,6 +395,14 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
     null,
   )
   const [calcOpenToday, setCalcOpenToday] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (initialData.length > 0 || marketData.length === 0) return
+    setOpen(String(marketData[0].open))
+    setHigh(String(marketData[0].high))
+    setLow(String(marketData[0].low))
+    setClose(String(marketData[0].close))
+  }, [initialData.length, marketData])
 
   const handleCalculate = useCallback(() => {
     const o = parseFloat(open)
@@ -399,7 +441,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
     : null
 
   const handleQuickShare = useCallback(async () => {
-    if (!levels || !signal) return
+    if (!isOnline || !navigator.onLine || !levels || !signal) return
     const labels: PivotShareLabels = {
       formula: translate(`${config.analysisName} FORMULA`),
       marketSignal: translate('MARKET SIGNAL'),
@@ -426,7 +468,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
     } catch (error) {
       if ((error as Error).name !== 'AbortError') console.error('Quick share failed:', error)
     }
-  }, [config, levels, signal, translate])
+  }, [config, isOnline, levels, signal, translate])
 
   return (
     <div className="min-h-screen bg-[#f4f7fb] text-slate-900 font-sans antialiased pb-24">
@@ -455,7 +497,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <SlidersHorizontal className="h-4 w-4" style={{ color: config.accentColor }} />
-              {translate(initialData.length > 0 ? 'Calculate Data' : 'Manual Input Data')}
+              {translate(marketData.length > 0 ? 'Calculate Data' : 'Manual Input Data')}
             </h2>
             <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-600">
               {translate('Daily Timeframe')}
@@ -560,16 +602,27 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
             <button
               type="button"
               onClick={handleQuickShare}
-              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r ${config.gradient} py-3 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-[0.99]`}
+              disabled={!isOnline}
+              title={!isOnline ? translate('Quick Share is unavailable offline.') : undefined}
+              className={
+                isOnline
+                  ? `mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r ${config.gradient} py-3 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-[0.99]`
+                  : 'mt-3 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-slate-200 py-3 text-sm font-bold text-slate-500'
+              }
             >
               <Share2 className="h-4 w-4" />
               {translate('Quick Share Image')}
             </button>
+            {!isOnline && (
+              <p className="mt-2 text-center text-xs text-slate-500" role="status">
+                {translate('Quick Share is unavailable offline.')}
+              </p>
+            )}
           </div>
         )}
 
         {/* ── Historical Data Applied ── */}
-        {initialData.length > 0 && (
+        {marketData.length > 0 && (
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
@@ -578,7 +631,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
               </div>
               <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">
                 <CalendarDays className="h-3.5 w-3.5" style={{ color: config.accentColor }} />
-                {fmtDate(initialData[0].date, lang)}
+                {fmtDate(marketData[0].date, lang)}
               </div>
             </div>
 
@@ -595,7 +648,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium">
-                  {initialData.map((row, idx) => (
+                  {marketData.map((row, idx) => (
                     <tr
                       key={row.date + idx}
                       className={idx === 0 ? 'text-slate-900' : 'text-slate-800'}
