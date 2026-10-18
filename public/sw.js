@@ -3,6 +3,7 @@ const NETWORK_TIMEOUT_MS = 3000
 const PRECACHE_PATHS = [
   '/',
   '/gold',
+  '/news',
   '/pivot',
   '/pivot/nest',
   '/pivot/gold',

@@ -6,6 +6,7 @@ import { NewsCard } from '@/components/goldcalc/news-card'
 import { TradingViewNewsWidget } from '@/components/goldcalc/tradingview-news-widget'
 import { news, categories, type NewsItem } from '@/lib/goldcalc-data'
 import { useTranslation } from '@/lib/LanguageContext'
+import { OfflineNewsNotice, useOnlineStatus } from '@/components/pwa/offline-support'
 
 interface NewsPageProps {
   showNews: (n: NewsItem) => void
@@ -13,6 +14,7 @@ interface NewsPageProps {
 
 export function NewsPage({ showNews }: NewsPageProps) {
   const { translate } = useTranslation()
+  const isOnline = useOnlineStatus()
   const [selectedCategory, setSelectedCategory] = useState('All News')
   const [showLiveStream, setShowLiveStream] = useState(false)
   const [visibleCount, setVisibleCount] = useState(6)
@@ -36,20 +38,24 @@ export function NewsPage({ showNews }: NewsPageProps) {
             {translate('Gold Fundamental News')}
           </h1>
 
-          <button
-            onClick={() => setShowLiveStream(!showLiveStream)}
-            className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm hover:border-[#0292e3]"
-          >
-            <Radio className="h-3.5 w-3.5 text-[#0292e3]" />
-            {translate(showLiveStream ? 'Show Card View' : 'TradingView Feed')}
-          </button>
+          {isOnline && (
+            <button
+              onClick={() => setShowLiveStream(!showLiveStream)}
+              className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm hover:border-[#0292e3]"
+            >
+              <Radio className="h-3.5 w-3.5 text-[#0292e3]" />
+              {translate(showLiveStream ? 'Show Card View' : 'TradingView Feed')}
+            </button>
+          )}
         </div>
         <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
           {translate('Stay informed with important news related to gold and global financial markets.')}
         </p>
       </div>
 
-      {showLiveStream ? (
+      {!isOnline ? (
+        <OfflineNewsNotice />
+      ) : showLiveStream ? (
         /* TradingView News Stream Container */
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <TradingViewNewsWidget symbol="OANDA:XAUUSD" height={650} />

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { WifiOff } from 'lucide-react'
 import { useOffline } from 'next/offline'
 import { useTranslation } from '@/lib/LanguageContext'
 
@@ -21,6 +22,23 @@ export function useOnlineStatus() {
   }, [])
 
   return isOnline && !isOffline
+}
+
+export function OfflineNewsNotice() {
+  const { translate } = useTranslation()
+
+  return (
+    <div
+      className="flex flex-col items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center text-amber-950"
+      role="status"
+      aria-live="polite"
+    >
+      <WifiOff className="h-8 w-8 text-amber-700" aria-hidden="true" />
+      <p className="text-sm font-semibold">
+        {translate('News are unavailable while offline. Reconnect to view the latest articles.')}
+      </p>
+    </div>
+  )
 }
 
 export function OfflineSupport() {

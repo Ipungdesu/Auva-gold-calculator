@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { NewsImage } from '@/components/news/NewsImage'
 import { useTranslation } from '@/lib/LanguageContext'
+import { OfflineNewsNotice, useOnlineStatus } from '@/components/pwa/offline-support'
 
 export type NewsArticle = {
   id: string
@@ -37,6 +38,7 @@ function formatPublishedDate(value: string) {
 
 export function NewsFeed({ initialArticles }: { initialArticles: NewsArticle[] }) {
   const { translate } = useTranslation()
+  const isOnline = useOnlineStatus()
   const [activeFilter, setActiveFilter] = useState<FilterValue>('all')
 
   const filteredArticles = useMemo(() => {
@@ -55,30 +57,36 @@ export function NewsFeed({ initialArticles }: { initialArticles: NewsArticle[] }
         </p>
       </header>
 
-      <div className="mb-6 overflow-x-auto pb-2">
-        <div className="flex min-w-max items-center gap-3">
-          {FILTERS.map((filter) => {
-            const isActive = activeFilter === filter.value
-            return (
-              <button
-                key={filter.value}
-                type="button"
-                onClick={() => setActiveFilter(filter.value)}
-                className={[
-                  'rounded-full border px-5 py-2.5 text-sm font-medium transition-all duration-200 whitespace-nowrap',
-                  isActive
-                    ? 'border-[#0f172a] bg-[#0f172a] text-white shadow-sm'
-                    : 'border-[#d8dfe8] bg-white text-slate-700 hover:border-slate-300',
-                ].join(' ')}
-              >
-                {translate(filter.label)}
-              </button>
-            )
-          })}
-        </div>
-      </div>
+      {isOnline ? (
+        <>
+          <div className="mb-6 overflow-x-auto pb-2">
+            <div className="flex min-w-max items-center gap-3">
+              {FILTERS.map((filter) => {
+                const isActive = activeFilter === filter.value
+                return (
+                  <button
+                    key={filter.value}
+                    type="button"
+                    onClick={() => setActiveFilter(filter.value)}
+                    className={[
+                      'rounded-full border px-5 py-2.5 text-sm font-medium transition-all duration-200 whitespace-nowrap',
+                      isActive
+                        ? 'border-[#0f172a] bg-[#0f172a] text-white shadow-sm'
+                        : 'border-[#d8dfe8] bg-white text-slate-700 hover:border-slate-300',
+                    ].join(' ')}
+                  >
+                    {translate(filter.label)}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
-      <PaginatedArticles key={activeFilter} articles={filteredArticles} />
+          <PaginatedArticles key={activeFilter} articles={filteredArticles} />
+        </>
+      ) : (
+        <OfflineNewsNotice />
+      )}
     </div>
   )
 }
