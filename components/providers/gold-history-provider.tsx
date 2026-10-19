@@ -13,6 +13,7 @@ import {
 } from 'react'
 import {
   emptyGoldCalculatorDraft,
+  GOLD_TOZ,
   type GoldCalculatorDraft,
   type GoldCalculatorResult,
   type GoldHistory,
@@ -91,7 +92,9 @@ export function GoldHistoryProvider({ children }: { children: ReactNode }) {
       const savedDraft = localStorage.getItem('auva-gold-calculator')
       if (savedDraft) {
         const parsedDraft: unknown = JSON.parse(savedDraft)
-        if (isGoldCalculatorDraft(parsedDraft)) setCalculatorDraft(parsedDraft)
+        if (isGoldCalculatorDraft(parsedDraft)) {
+          setCalculatorDraft({ ...parsedDraft, toz: String(GOLD_TOZ) })
+        }
       }
     } catch (error) {
       console.error('Failed to restore gold calculator state from local storage.', error)
@@ -123,24 +126,23 @@ export function GoldHistoryProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const loadGoldCalculation = useCallback((item: GoldHistory) => {
-    const toz = item.toz && item.toz > 0 ? item.toz : 31.1035
     const exchangeRate =
       item.exchangeRate && item.exchangeRate > 0
         ? item.exchangeRate
         : item.buyingPriceUsd && item.buyingPriceUsd > 0
-          ? (item.buyingPrice * toz) / item.buyingPriceUsd
+          ? (item.buyingPrice * GOLD_TOZ) / item.buyingPriceUsd
           : 1
     const buyingPrice =
-      item.buyingPriceUsd ?? (item.buyingPrice * toz) / exchangeRate
+      item.buyingPriceUsd ?? (item.buyingPrice * GOLD_TOZ) / exchangeRate
     const sellingPrice =
-      item.sellingPriceUsd ?? (item.sellingPrice * toz) / exchangeRate
+      item.sellingPriceUsd ?? (item.sellingPrice * GOLD_TOZ) / exchangeRate
 
     setCalculatorDraft({
       capital: String(item.capital),
       buyingPrice: String(buyingPrice),
       sellingPrice: String(sellingPrice),
       exchangeRate: String(exchangeRate),
-      toz: String(toz),
+      toz: String(GOLD_TOZ),
       result: null,
     })
   }, [])

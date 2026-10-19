@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from '@/lib/LanguageContext'
 import { TradingViewMiniWidget } from '@/components/home/TradingViewMiniWidget'
 import { ExchangeRateCard } from '@/components/home/ExchangeRateCard'
+import { OfflineMarketPlaceholder } from '@/components/home/OfflineMarketPlaceholder'
+import { useOnlineStatus } from '@/components/pwa/offline-support'
 
 export function MarketIndicators() {
   const { t, lang } = useTranslation()
+  const isOnline = useOnlineStatus()
   const [timeStr, setTimeStr] = useState<string>('')
 
   useEffect(() => {
@@ -35,33 +38,44 @@ export function MarketIndicators() {
       {/* Section Header */}
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-          </span>
+          {isOnline ? (
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+            </span>
+          ) : (
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+          )}
           <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-800">
             {t.indicatorsTitle}
           </h2>
         </div>
 
-        {timeStr && (
+        {isOnline && timeStr && (
           <span className="text-[11px] font-semibold text-slate-400">
             {t.synced}: {timeStr}
           </span>
         )}
       </div>
 
-      <div className="grid gap-3.5 sm:grid-cols-2">
-        <div className="flex h-[160px] min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-3 shadow-sm transition-shadow hover:shadow-md">
-          <TradingViewMiniWidget
-            symbol="OANDA:XAUUSD"
-            height={134}
-            locale={widgetLocale}
-          />
-        </div>
+      {isOnline ? (
+        <div className="grid gap-3.5 sm:grid-cols-2">
+          <div className="flex h-[160px] min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-3 shadow-sm transition-shadow hover:shadow-md">
+            <TradingViewMiniWidget
+              symbol="OANDA:XAUUSD"
+              height={134}
+              locale={widgetLocale}
+            />
+          </div>
 
-        <ExchangeRateCard />
-      </div>
+          <ExchangeRateCard />
+        </div>
+      ) : (
+        <OfflineMarketPlaceholder
+          message="Real-time market indicators are unavailable offline."
+          className="h-[160px]"
+        />
+      )}
     </section>
   )
 }

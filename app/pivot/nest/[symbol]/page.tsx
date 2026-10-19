@@ -56,5 +56,5 @@ export default async function NestSymbolPage({ params }: PageProps) {
     initialData = getDummyPivotData(config.dbSymbol)
   }
 
-  return <NestCalculatorPage symbol={symbol} initialData={initialData} />
+  return <NestCalculatorPage key={symbol} symbol={symbol} initialData={initialData} />
 }

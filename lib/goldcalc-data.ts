@@ -131,6 +131,8 @@ export const money = (n: number) =>
 export const formatRupiah = (n: number) =>
   `Rp ${Math.round(n).toLocaleString('id-ID')}`
 
+export const GOLD_TOZ = 31.1
+
 export const number = (n: number) =>
   n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
@@ -169,7 +171,7 @@ export const emptyGoldCalculatorDraft: GoldCalculatorDraft = {
   buyingPrice: '',
   sellingPrice: '',
   exchangeRate: '',
-  toz: '',
+  toz: String(GOLD_TOZ),
   result: null,
 }
 export type PivotHistory = { id: string; type: string; ohlc: typeof mockOHLC; result: PivotResult; date: string }

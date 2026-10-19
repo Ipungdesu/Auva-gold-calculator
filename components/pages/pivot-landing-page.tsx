@@ -16,12 +16,13 @@ const icons: Record<string, React.ReactNode> = {
     </svg>
   ),
   hangseng: (
-    <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">
-      <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.25)" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="white" fontWeight="bold">
-        韓
-      </text>
-    </svg>
+    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/25">
+      <img
+        src="/hangseng-logo.png"
+        alt="Hang Seng"
+        className="h-7 w-7 object-contain"
+      />
+    </div>
   ),
   nikkei: (
     <svg viewBox="0 0 40 40" className="h-10 w-10" fill="none">

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Calculator, Hourglass, TrendingUp, Trash2 } from 'lucide-react'
-import { formatRupiah, type GoldHistory } from '@/lib/goldcalc-data'
+import { formatRupiah, GOLD_TOZ, type GoldHistory } from '@/lib/goldcalc-data'
 import { useGoldHistory } from '@/components/providers/gold-history-provider'
 import { useTranslation } from '@/lib/LanguageContext'
 
@@ -19,8 +19,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
     setGoldItems,
     loadGoldCalculation,
   } = useGoldHistory()
-  const { capital, buyingPrice, sellingPrice, exchangeRate, toz, result } =
-    calculatorDraft
+  const { capital, buyingPrice, sellingPrice, exchangeRate, result } = calculatorDraft
   const [showHistory, setShowHistory] = useState(false)
 
   function calculate() {
@@ -28,7 +27,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
     const hbUsd = parseFloat(buyingPrice) || 0
     const hjUsd = parseFloat(sellingPrice) || 0
     const rate = parseFloat(exchangeRate) || 0
-    const ounce = parseFloat(toz) || 0
+    const ounce = GOLD_TOZ
 
     if (
       cap <= 0 ||
@@ -72,7 +71,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
       buyingPriceUsd: hbUsd,
       sellingPriceUsd: hjUsd,
       exchangeRate: rate,
-      toz: ounce,
+      toz: GOLD_TOZ,
       quantity: res.quantityGrams,
       profit: res.profit,
       date: new Date().toISOString(),
@@ -80,7 +79,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
   }
 
   function updateInput(
-    field: 'capital' | 'buyingPrice' | 'sellingPrice' | 'exchangeRate' | 'toz',
+    field: 'capital' | 'buyingPrice' | 'sellingPrice' | 'exchangeRate',
     value: string,
   ) {
     setCalculatorDraft((draft) => ({ ...draft, [field]: value }))
@@ -92,7 +91,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
       buyingPrice: '',
       sellingPrice: '',
       exchangeRate: '',
-      toz: '',
+      toz: String(GOLD_TOZ),
       result: null,
     })
   }
@@ -155,7 +154,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
             </div>
           </div>
 
-          {/* Exchange rate and TOZ */}
+          {/* Exchange rate and fixed TOZ */}
           <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-3">
             <div className="grid grid-cols-2 gap-3">
               <div className="flex min-w-0 flex-col gap-1.5">
@@ -174,14 +173,12 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
                 <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
                   TOZ
                 </label>
-                <input
-                  type="number"
-                  step="0.001"
-                  value={toz}
-                  placeholder="0"
-                  onChange={(e) => updateInput('toz', e.target.value)}
-                  className="h-[43px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
-                />
+                <div
+                  className="flex h-[43px] w-full items-center rounded-lg border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm font-mono font-semibold text-slate-600"
+                  aria-label={`TOZ fixed at ${GOLD_TOZ}`}
+                >
+                  {GOLD_TOZ}
+                </div>
               </div>
             </div>
           </div>
