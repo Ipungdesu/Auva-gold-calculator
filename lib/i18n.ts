@@ -83,6 +83,12 @@ export const translations: Record<Language, Translations> = {
     content: {
       'Offline mode: calculations remain available using saved data. Market data may be outdated.':
         'Mode offline: kalkulator tetap dapat digunakan dengan data tersimpan. Data pasar mungkin tidak terbaru.',
+      'Real-time market indicators are unavailable offline.':
+        'Indikator pasar real-time tidak tersedia saat offline.',
+      'Real-time chart is unavailable offline.':
+        'Grafik real-time tidak tersedia saat offline.',
+      'Enter Open': 'Masukkan harga pembukaan',
+      'Enter Close': 'Masukkan harga penutupan',
       'Quick Share is unavailable offline.': 'Quick Share tidak tersedia saat offline.',
       'Physical Gold Calculator': 'Kalkulator Emas Fisik',
       'Calculate physical gold values and potential profit.':
@@ -357,6 +363,12 @@ export const translations: Record<Language, Translations> = {
     content: {
       'Mode offline: kalkulator tetap dapat digunakan dengan data tersimpan. Data pasar mungkin tidak terbaru.':
         'Offline mode: calculations remain available using saved data. Market data may be outdated.',
+      'Indikator pasar real-time tidak tersedia saat offline.':
+        'Real-time market indicators are unavailable offline.',
+      'Grafik real-time tidak tersedia saat offline.':
+        'Real-time chart is unavailable offline.',
+      'Masukkan harga pembukaan': 'Enter Open',
+      'Masukkan harga penutupan': 'Enter Close',
       'Quick Share tidak tersedia saat offline.': 'Quick Share is unavailable offline.',
       'Kalkulator Emas Fisik': 'Physical Gold Calculator',
       'Hitung nilai emas fisik dan potensi keuntungan.':

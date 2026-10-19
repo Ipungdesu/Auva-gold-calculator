@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react' // UBAH: useEffect dihapus
+import { useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -15,7 +15,8 @@ import {
   CalendarDays,
 } from 'lucide-react'
 import { AppHeader } from '@/components/goldcalc/app-header'
-import type { OhlcRow } from '@/components/pivot/PivotCalculator' // BARU
+import type { OhlcRow } from '@/components/pivot/PivotCalculator'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface NestCalculatorPageProps {
   symbol: string
@@ -26,25 +27,6 @@ interface HistoricalData {
   date: string
   open: number
   close: number
-}
-
-function isHistoricalData(value: unknown): value is HistoricalData {
-  if (!value || typeof value !== 'object') return false
-  const row = value as Record<string, unknown>
-  return (
-    typeof row.date === 'string' &&
-    typeof row.open === 'number' &&
-    Number.isFinite(row.open) &&
-    typeof row.close === 'number' &&
-    Number.isFinite(row.close)
-  )
-}
-
-function parseHistoricalResponse(value: unknown): HistoricalData[] | null {
-  if (!value || typeof value !== 'object') return null
-  const response = value as Record<string, unknown>
-  if (response.success !== true || !Array.isArray(response.data)) return null
-  return response.data.filter(isHistoricalData)
 }
 
 type ThemeConfig = {
@@ -126,15 +108,13 @@ function formatShortDate(dateString: string, lang: 'id' | 'en') {
 
 export default function NestCalculatorPage({
   symbol,
-  initialData, // BARU
+  initialData,
 }: NestCalculatorPageProps) {
   const theme = getTheme(symbol)
   const { lang, translate } = useTranslation()
 
   // =========================================================
-  // DATA HISTORIS
-  // UBAH: berasal dari server (sumber yang sama dengan Pivot),
-  // bukan lagi fetch('/api/nest/historical')
+  // Data historis diambil oleh server route dari sumber yang sama dengan Pivot.
   // =========================================================
 
   const historicalData: HistoricalData[] = initialData.map((row) => ({
@@ -147,9 +127,15 @@ export default function NestCalculatorPage({
   // STATE DATA YANG DIPILIH UNTUK PERHITUNGAN
   // =========================================================
 
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
-  const [selectedOpen, setSelectedOpen] = useState<number | null>(null)
-  const [selectedClose, setSelectedClose] = useState<number | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(
+    initialData[0]?.date ?? null,
+  )
+  const [selectedOpen, setSelectedOpen] = useState(
+    initialData[0] ? String(initialData[0].open) : '',
+  )
+  const [selectedClose, setSelectedClose] = useState(
+    initialData[0] ? String(initialData[0].close) : '',
+  )
 
   // Open hari ini
   const [openToday, setOpenToday] = useState('')
@@ -165,79 +151,13 @@ export default function NestCalculatorPage({
   const [conditionText, setConditionText] = useState('')
 
   // =========================================================
-  // AMBIL DATA HISTORIS DARI API
-  // =========================================================
-
-  useEffect(() => {
-    let cancelled = false
-
-    async function fetchHistoricalData() {
-      const storageKey = `auva-nest-history:${symbol.toLowerCase()}`
-      let cachedData: HistoricalData[] = []
-
-      try {
-        const savedData = localStorage.getItem(storageKey)
-        if (savedData) {
-          const parsedData: unknown = JSON.parse(savedData)
-          if (Array.isArray(parsedData)) {
-            cachedData = parsedData.filter(isHistoricalData)
-            if (!cancelled && cachedData.length > 0) {
-              setHistoricalData(cachedData)
-              setLoadingHistory(false)
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Failed to restore NEST historical data from local storage:', error)
-      }
-
-      try {
-        const response = await fetch(
-          `/api/nest/historical?symbol=${encodeURIComponent(symbol.toLowerCase())}`,
-          {
-            cache: 'no-store',
-          },
-        )
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch historical data')
-        }
-
-        const result = await response.json()
-        const formattedData = parseHistoricalResponse(result)
-        if (!formattedData) {
-          throw new Error('Invalid NEST historical data response')
-        }
-
-        if (!cancelled && (formattedData.length > 0 || cachedData.length === 0)) {
-          setHistoricalData(formattedData)
-          try {
-            localStorage.setItem(storageKey, JSON.stringify(formattedData))
-          } catch (error) {
-            console.error('Failed to save NEST historical data to local storage:', error)
-          }
-        }
-      } catch (error) {
-        console.error('Failed to load NEST historical data:', error)
-      } finally {
-        if (!cancelled) setLoadingHistory(false)
-      }
-    }
-
-    fetchHistoricalData()
-    return () => {
-      cancelled = true
-    }
-  }, [symbol])
-
-  // =========================================================
   // USE THIS
   // =========================================================
 
   function handleUseThis(item: HistoricalData) {
     setSelectedDate(item.date)
-    setSelectedOpen(item.open)
-    setSelectedClose(item.close)
+    setSelectedOpen(String(item.open))
+    setSelectedClose(String(item.close))
 
     // Untuk sementara Open Today mengikuti Open dari data yang dipilih.
     // Nanti bisa diganti dengan data live/current dari API.
@@ -253,25 +173,29 @@ export default function NestCalculatorPage({
   // =========================================================
 
   function handleCalculate() {
-    if (selectedClose === null || openToday.trim() === '') {
-      return
-    }
-
+    if (!selectedOpen.trim() || !selectedClose.trim() || openToday.trim() === '') return
+    const currentOpen = Number(selectedOpen)
+    const previousClose = Number(selectedClose)
     const todayOpen = Number(openToday)
 
-    if (Number.isNaN(todayOpen)) {
-      return
-    }
+    if (
+      !Number.isFinite(currentOpen) ||
+      currentOpen <= 0 ||
+      !Number.isFinite(previousClose) ||
+      previousClose <= 0 ||
+      !Number.isFinite(todayOpen) ||
+      todayOpen <= 0
+    ) return
 
     // NEST:
     // Open Today > Previous Close => SELL
     // Open Today < Previous Close => BUY
     // Open Today = Previous Close => NEUTRAL
 
-    if (todayOpen > selectedClose) {
+    if (todayOpen > previousClose) {
       setSignal('SELL')
       setConditionText(`Today's open is above the previous close.`)
-    } else if (todayOpen < selectedClose) {
+    } else if (todayOpen < previousClose) {
       setSignal('BUY')
       setConditionText(`Today's open is below the previous close.`)
     } else {
@@ -286,12 +210,31 @@ export default function NestCalculatorPage({
 
   function handleNewCalculation() {
     setSelectedDate(null)
-    setSelectedOpen(null)
-    setSelectedClose(null)
+    setSelectedOpen('')
+    setSelectedClose('')
     setOpenToday('')
     setSignal(null)
     setConditionText('')
   }
+
+  function updateManualPrice(field: 'open' | 'close', value: string) {
+    if (!/^\d*\.?\d*$/.test(value)) return
+
+    if (field === 'open') setSelectedOpen(value)
+    else setSelectedClose(value)
+
+    setSelectedDate(null)
+    setSignal(null)
+    setConditionText('')
+  }
+
+  const canCalculate =
+    Number.isFinite(Number(selectedOpen)) &&
+    Number(selectedOpen) > 0 &&
+    Number.isFinite(Number(selectedClose)) &&
+    Number(selectedClose) > 0 &&
+    Number.isFinite(Number(openToday)) &&
+    Number(openToday) > 0
 
   const signalLabel =
     signal === 'BUY'
@@ -360,39 +303,51 @@ export default function NestCalculatorPage({
           {/* OPEN & CLOSE */}
 
           <div className="mt-3 grid grid-cols-2 gap-2.5">
-            <div className="rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
+            <label className="rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
               <span className="text-[10px] font-bold tracking-wider text-slate-500">
                 {translate('OPEN')}
               </span>
 
-              <div className="mt-1 text-base font-extrabold text-[#1e1b4b]">
-                {selectedOpen !== null
-                  ? formatMoney(selectedOpen)
-                  : '-'}
-              </div>
-            </div>
+              <input
+                type="text"
+                inputMode="decimal"
+                value={selectedOpen}
+                onChange={(event) => updateManualPrice('open', event.target.value)}
+                placeholder={translate('Enter Open')}
+                aria-label={translate('OPEN')}
+                className="mt-1 w-full bg-transparent text-base font-extrabold text-[#1e1b4b] outline-none placeholder:text-slate-300"
+              />
+            </label>
 
-            <div className="rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
+            <label className="rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
               <span className="text-[10px] font-bold tracking-wider text-slate-500">
                 {translate('CLOSE')}
               </span>
 
-              <div className="mt-1 text-base font-extrabold text-[#1e1b4b]">
-                {selectedClose !== null
-                  ? formatMoney(selectedClose)
-                  : '-'}
-              </div>
-            </div>
+              <input
+                type="text"
+                inputMode="decimal"
+                value={selectedClose}
+                onChange={(event) => updateManualPrice('close', event.target.value)}
+                placeholder={translate('Enter Close')}
+                aria-label={translate('CLOSE')}
+                className="mt-1 w-full bg-transparent text-base font-extrabold text-[#1e1b4b] outline-none placeholder:text-slate-300"
+              />
+            </label>
           </div>
 
           {/* OPEN TODAY */}
 
           <div className="mt-2.5 rounded-xl border border-slate-200 bg-[#f5f7fb] p-3">
-            <label className="text-[10px] font-bold tracking-wider text-slate-500">
-              OPEN TODAY
+            <label
+              htmlFor="nest-open-today"
+              className="text-[10px] font-bold tracking-wider text-slate-500"
+            >
+              {translate('OPEN TODAY')}
             </label>
 
             <input
+              id="nest-open-today"
               type="text"
               inputMode="decimal"
               value={openToday}
@@ -403,7 +358,7 @@ export default function NestCalculatorPage({
                   setOpenToday(value)
                 }
               }}
-              placeholder="Enter today's open"
+              placeholder={translate("Enter today's open")}
               className="mt-1 w-full bg-transparent text-base font-extrabold text-[#1e1b4b] outline-none placeholder:text-slate-300"
             />
           </div>
@@ -413,11 +368,7 @@ export default function NestCalculatorPage({
           <button
             type="button"
             onClick={handleCalculate}
-            disabled={
-              selectedOpen === null ||
-              selectedClose === null ||
-              openToday === null
-            }
+            disabled={!canCalculate}
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold text-white shadow-sm transition-all active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             style={{
               background: theme.gradient,
@@ -443,7 +394,7 @@ export default function NestCalculatorPage({
                 />
 
                 <span className="text-xs font-extrabold tracking-wider text-slate-800">
-                  MARKET SIGNAL
+                  {translate('MARKET SIGNAL')}
                 </span>
               </div>
 
@@ -498,8 +449,8 @@ export default function NestCalculatorPage({
                 </div>
 
                 <div className="text-xs font-semibold text-slate-400">
-                  {selectedClose !== null
-                    ? formatMoney(selectedClose)
+                  {selectedClose
+                    ? formatMoney(Number(selectedClose))
                     : '-'}
                 </div>
               </div>

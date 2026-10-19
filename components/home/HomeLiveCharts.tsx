@@ -3,9 +3,12 @@
 import { BarChart3 } from 'lucide-react'
 import { useTranslation } from '@/lib/LanguageContext'
 import { TradingViewChart } from '@/components/home/TradingViewChart'
+import { OfflineMarketPlaceholder } from '@/components/home/OfflineMarketPlaceholder'
+import { useOnlineStatus } from '@/components/pwa/offline-support'
 
 export function HomeLiveCharts() {
   const { t, lang } = useTranslation()
+  const isOnline = useOnlineStatus()
   const widgetLocale = lang === 'id' ? 'id' : 'en'
 
   return (
@@ -27,15 +30,22 @@ export function HomeLiveCharts() {
       </div>
 
       {/* Chart Card Container */}
-      <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-2 shadow-sm sm:p-4">
-        <div className="h-[440px] w-full">
-          <TradingViewChart
-            symbol="OANDA:XAUUSD"
-            height={440}
-            locale={widgetLocale}
-          />
+      {isOnline ? (
+        <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-2 shadow-sm sm:p-4">
+          <div className="h-[440px] w-full">
+            <TradingViewChart
+              symbol="OANDA:XAUUSD"
+              height={440}
+              locale={widgetLocale}
+            />
+          </div>
         </div>
-      </div>
+      ) : (
+        <OfflineMarketPlaceholder
+          message="Real-time chart is unavailable offline."
+          className="h-[440px]"
+        />
+      )}
     </section>
   )
 }
