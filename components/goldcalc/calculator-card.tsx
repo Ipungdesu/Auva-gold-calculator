@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Calculator, Hourglass, TrendingUp } from 'lucide-react'
+import { Calculator, Hourglass, TrendingUp, Trash2 } from 'lucide-react'
 import { formatRupiah, type GoldHistory } from '@/lib/goldcalc-data'
+import { useGoldHistory } from '@/components/providers/gold-history-provider'
 import { useTranslation } from '@/lib/LanguageContext'
 
 interface CalculatorCardProps {
@@ -12,28 +13,15 @@ interface CalculatorCardProps {
 
 export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
   const { translate } = useTranslation()
-  const [capital, setCapital] = useState('100000000')
-  const [buyingPrice, setBuyingPrice] = useState('4000')
-  const [sellingPrice, setSellingPrice] = useState('4400')
-  const [exchangeRate, setExchangeRate] = useState('18000')
-  const [toz, setToz] = useState('31.103')
+  const {
+    calculatorDraft,
+    setCalculatorDraft,
+    setGoldItems,
+    loadGoldCalculation,
+  } = useGoldHistory()
+  const { capital, buyingPrice, sellingPrice, exchangeRate, toz, result } =
+    calculatorDraft
   const [showHistory, setShowHistory] = useState(false)
-
-  const [result, setResult] = useState<{
-    quantityGrams: number
-    totalBuyingPrice: number
-    totalSellingPrice: number
-    spreadPerGram: number
-    profit: number
-    profitPercent: number
-  } | null>({
-    quantityGrams: 86.95,
-    totalBuyingPrice: 99992500,
-    totalSellingPrice: 102601000,
-    spreadPerGram: 30000,
-    profit: 2608500,
-    profitPercent: 2.61,
-  })
 
   function calculate() {
     const cap = parseFloat(capital) || 0
@@ -74,7 +62,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
       profitPercent: Number(profitPct.toFixed(2)),
     }
 
-    setResult(res)
+    setCalculatorDraft((draft) => ({ ...draft, result: res }))
 
     addGold({
       id: crypto.randomUUID(),
@@ -83,18 +71,30 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
       sellingPrice: hj,
       buyingPriceUsd: hbUsd,
       sellingPriceUsd: hjUsd,
+      exchangeRate: rate,
+      toz: ounce,
       quantity: res.quantityGrams,
       profit: res.profit,
       date: new Date().toISOString(),
     })
   }
 
+  function updateInput(
+    field: 'capital' | 'buyingPrice' | 'sellingPrice' | 'exchangeRate' | 'toz',
+    value: string,
+  ) {
+    setCalculatorDraft((draft) => ({ ...draft, [field]: value }))
+  }
+
   function handleReset() {
-    setCapital('100000000')
-    setBuyingPrice('4000')
-    setSellingPrice('4400')
-    setExchangeRate('18000')
-    setToz('31.103')
+    setCalculatorDraft({
+      capital: '',
+      buyingPrice: '',
+      sellingPrice: '',
+      exchangeRate: '',
+      toz: '',
+      result: null,
+    })
   }
 
   return (
@@ -118,80 +118,71 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
               <input
                 type="number"
                 value={capital}
-                onChange={(e) => setCapital(e.target.value)}
+                placeholder="0"
+                onChange={(e) => updateInput('capital', e.target.value)}
                 className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 py-2.5 pl-10 pr-4 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
               />
             </div>
           </div>
 
-          {/* Buying Price (HB) */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              {translate('BUYING PRICE (HB)')}
-            </label>
-            <input
-              type="number"
-              value={buyingPrice}
-              onChange={(e) => setBuyingPrice(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
-            />
-          </div>
-
-          {/* Selling Price (HJ) */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              {translate('SELLING PRICE (HJ)')}
-            </label>
-            <input
-              type="number"
-              value={sellingPrice}
-              onChange={(e) => setSellingPrice(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
-            />
-          </div>
-
-          {/* Exchange Rate */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              {translate('EXCHANGE RATE')}
-            </label>
-            <input
-              type="number"
-              value={exchangeRate}
-              onChange={(e) => setExchangeRate(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-mono font-medium text-slate-900 focus:border-[#0292e3] focus:outline-none"
-            />
-          </div>
-
-          {/* Exchange Rate + TOZ */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Exchange Rate */}
-            <div className="flex min-w-0 flex-col gap-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
-                {translate('EXCHANGE RATE')}
-              </label>
-
-              <input
-                type="number"
-                value={exchangeRate}
-                onChange={(e) => setExchangeRate(e.target.value)}
-                className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 px-3.5 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
-              />
+          {/* Buying and selling price */}
+          <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex min-w-0 flex-col gap-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
+                  {translate('BUYING PRICE (HB)')}
+                </label>
+                <input
+                  type="number"
+                  value={buyingPrice}
+                  placeholder="0"
+                  onChange={(e) => updateInput('buyingPrice', e.target.value)}
+                  className="h-[43px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
+                />
+              </div>
+              <div className="flex min-w-0 flex-col gap-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
+                  {translate('SELLING PRICE (HJ)')}
+                </label>
+                <input
+                  type="number"
+                  value={sellingPrice}
+                  placeholder="0"
+                  onChange={(e) => updateInput('sellingPrice', e.target.value)}
+                  className="h-[43px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
+                />
+              </div>
             </div>
+          </div>
 
-            {/* TOZ */}
-            <div className="flex min-w-0 flex-col gap-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
-                TOZ
-              </label>
-
-              <input
-                type="number"
-                step="0.001"
-                value={toz}
-                onChange={(e) => setToz(e.target.value)}
-                className="h-[43px] w-full rounded-xl border border-slate-200 bg-slate-50/40 px-3.5 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
-              />
+          {/* Exchange rate and TOZ */}
+          <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex min-w-0 flex-col gap-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
+                  {translate('EXCHANGE RATE')}
+                </label>
+                <input
+                  type="number"
+                  value={exchangeRate}
+                  placeholder="0"
+                  onChange={(e) => updateInput('exchangeRate', e.target.value)}
+                  className="h-[43px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
+                />
+              </div>
+              <div className="flex min-w-0 flex-col gap-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-[0.05em] text-slate-500">
+                  TOZ
+                </label>
+                <input
+                  type="number"
+                  step="0.001"
+                  value={toz}
+                  placeholder="0"
+                  onChange={(e) => updateInput('toz', e.target.value)}
+                  className="h-[43px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm font-mono font-semibold text-slate-900 outline-none transition focus:border-[#0292e3] focus:ring-2 focus:ring-[#0292e3]/10"
+                />
+              </div>
             </div>
           </div>
 
@@ -430,6 +421,29 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
                       +{profitPercent.toFixed(2)}%
                     </span>
                   </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      loadGoldCalculation(item)
+                      setShowHistory(false)
+                    }}
+                    className="rounded-lg bg-[#0292e3] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#027dc2]"
+                  >
+                    {translate('Use this')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setGoldItems((items) => items.filter((historyItem) => historyItem.id !== item.id))
+                    }
+                    aria-label={translate('Delete history item')}
+                    className="rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
             )

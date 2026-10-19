@@ -8,9 +8,19 @@ import { GoldHistoryProvider } from '@/components/providers/gold-history-provide
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export const metadata: Metadata = {
-  title: 'GoldCalc — Gold Market Intelligence',
+  title: 'AUVA APP',
   description: 'Calculate physical gold value, classic pivot points, and monitor gold market context.',
   generator: 'GoldCalc MVP',
+  applicationName: 'AUVA APP',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'AUVA APP',
+  },
+  icons: {
+    icon: '/logo.svg',
+    apple: '/pwa-icon-192.png',
+  },
 }
 
 export const viewport: Viewport = {

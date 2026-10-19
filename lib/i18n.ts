@@ -167,6 +167,8 @@ export const translations: Record<Language, Translations> = {
       'Calculation result': 'Hasil perhitungan',
       'New Calculation': 'Perhitungan Baru',
       'Transaction Concept': 'Konsep Transaksi',
+      'Pivot transaction concept':
+        'Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.',
       'Calculate →': 'Hitung →',
       'PIVOT POINT': 'TITIK PIVOT',
       'Physical Gold': 'Emas Fisik',
@@ -180,7 +182,7 @@ export const translations: Record<Language, Translations> = {
       'HIGH': 'TERTINGGI',
       'LOW': 'TERENDAH',
       'CLOSE': 'TUTUP',
-      'REFERENCE OPEN': 'HARGA PEMBUKAAN ACUAN',
+      'OPEN TODAY': 'PEMBUKAAN HARI INI',
       'Calculate Data': 'Hitung Data',
       'Daily Timeframe': 'Rentang Waktu Harian',
       'Calculation History': 'Riwayat Perhitungan',
@@ -280,7 +282,6 @@ export const translations: Record<Language, Translations> = {
       'NEST Calculator': 'Kalkulator NEST',
       'NEST transaction concept':
         'Konsep transaksi yang menggunakan perbandingan harga pembukaan hari ini dengan harga penutupan sesi sebelumnya untuk menentukan bias arah transaksi.',
-      'OPEN TODAY': 'PEMBUKAAN HARI INI',
       "Enter today's open": 'Masukkan harga pembukaan hari ini',
       Neutral: 'Netral',
       BUY: 'BELI',
@@ -439,6 +440,8 @@ export const translations: Record<Language, Translations> = {
       'Hasil perhitungan': 'Calculation result',
       'Perhitungan Baru': 'New Calculation',
       'Konsep Transaksi': 'Transaction Concept',
+      'Pivot transaction concept':
+        'A transaction concept for identifying objective price levels calculated from the previous period high, low, and close to determine support and resistance areas.',
       'Hitung →': 'Calculate →',
       'TITIK PIVOT': 'PIVOT POINT',
       'Emas Fisik': 'Physical Gold',
@@ -452,7 +455,7 @@ export const translations: Record<Language, Translations> = {
       TERTINGGI: 'HIGH',
       TERENDAH: 'LOW',
       TUTUP: 'CLOSE',
-      'HARGA PEMBUKAAN ACUAN': 'REFERENCE OPEN',
+      'OPEN TODAY': 'OPEN TODAY',
       'Hitung Data': 'Calculate Data',
       'Input Data Manual': 'Manual Input Data',
       'Rentang Waktu Harian': 'Daily Timeframe',

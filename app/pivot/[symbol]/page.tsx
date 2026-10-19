@@ -24,7 +24,7 @@ export async function generateMetadata({
   if (!isValidSlug(symbol)) return {}
   const config = INSTRUMENTS[symbol]
   return {
-    title: `${config.label} Pivot Calculator — AUVA`,
+    title: 'AUVA APP',
     description: config.subtitle,
   }
 }
