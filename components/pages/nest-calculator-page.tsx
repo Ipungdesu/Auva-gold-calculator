@@ -27,6 +27,25 @@ interface HistoricalData {
   close: number
 }
 
+function isHistoricalData(value: unknown): value is HistoricalData {
+  if (!value || typeof value !== 'object') return false
+  const row = value as Record<string, unknown>
+  return (
+    typeof row.date === 'string' &&
+    typeof row.open === 'number' &&
+    Number.isFinite(row.open) &&
+    typeof row.close === 'number' &&
+    Number.isFinite(row.close)
+  )
+}
+
+function parseHistoricalResponse(value: unknown): HistoricalData[] | null {
+  if (!value || typeof value !== 'object') return null
+  const response = value as Record<string, unknown>
+  if (response.success !== true || !Array.isArray(response.data)) return null
+  return response.data.filter(isHistoricalData)
+}
+
 type ThemeConfig = {
   label: string
   shortLabel: string
@@ -144,10 +163,29 @@ export default function NestCalculatorPage({
   // =========================================================
 
   useEffect(() => {
-    async function fetchHistoricalData() {
-      try {
-        setLoadingHistory(true)
+    let cancelled = false
 
+    async function fetchHistoricalData() {
+      const storageKey = `auva-nest-history:${symbol.toLowerCase()}`
+      let cachedData: HistoricalData[] = []
+
+      try {
+        const savedData = localStorage.getItem(storageKey)
+        if (savedData) {
+          const parsedData: unknown = JSON.parse(savedData)
+          if (Array.isArray(parsedData)) {
+            cachedData = parsedData.filter(isHistoricalData)
+            if (!cancelled && cachedData.length > 0) {
+              setHistoricalData(cachedData)
+              setLoadingHistory(false)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to restore NEST historical data from local storage:', error)
+      }
+
+      try {
         const response = await fetch(
           `/api/nest/historical?symbol=${encodeURIComponent(symbol.toLowerCase())}`,
           {
@@ -160,30 +198,31 @@ export default function NestCalculatorPage({
         }
 
         const result = await response.json()
+        const formattedData = parseHistoricalResponse(result)
+        if (!formattedData) {
+          throw new Error('Invalid NEST historical data response')
+        }
 
-        if (result.success && Array.isArray(result.data)) {
-          const formattedData: HistoricalData[] = result.data.map(
-            (item: HistoricalData) => ({
-              date: item.date,
-              open: Number(item.open),
-              close: Number(item.close),
-            }),
-          )
-
+        if (!cancelled && (formattedData.length > 0 || cachedData.length === 0)) {
           setHistoricalData(formattedData)
-        } else {
-          setHistoricalData([])
+          try {
+            localStorage.setItem(storageKey, JSON.stringify(formattedData))
+          } catch (error) {
+            console.error('Failed to save NEST historical data to local storage:', error)
+          }
         }
       } catch (error) {
         console.error('Failed to load NEST historical data:', error)
-        setHistoricalData([])
       } finally {
-        setLoadingHistory(false)
+        if (!cancelled) setLoadingHistory(false)
       }
     }
 
     fetchHistoricalData()
-  }, [])
+    return () => {
+      cancelled = true
+    }
+  }, [symbol])
 
   // =========================================================
   // USE THIS
