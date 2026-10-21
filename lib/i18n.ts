@@ -177,7 +177,7 @@ export const translations: Record<Language, Translations> = {
       'New Calculation': 'Perhitungan Baru',
       'Transaction Concept': 'Konsep Transaksi',
       'Pivot transaction concept':
-        'Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.',
+        'Konsep transaksi Pivot untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.',
       'Calculate →': 'Hitung →',
       'PIVOT POINT': 'TITIK PIVOT',
       'Physical Gold': 'Emas Fisik',
@@ -186,6 +186,7 @@ export const translations: Record<Language, Translations> = {
       'HOME': 'BERANDA',
       'GOLD': 'EMAS',
       'PIVOT': 'PIVOT',
+      'METHOD': 'METODE',
       'NEWS': 'BERITA',
       'OPEN': 'PEMBUKAAN',
       'HIGH': 'TERTINGGI',
@@ -284,13 +285,14 @@ export const translations: Record<Language, Translations> = {
       'HANGSENG Index': 'Indeks HANG SENG',
       'NIKKEI INDEX': 'INDEKS NIKKEI',
       'HANG SENG INDEX FORMULA': 'FORMULA INDEKS HANG SENG',
+      'HANGSENG INDEX FORMULA': 'FORMULA INDEKS HANG SENG',
       'NIKKEI INDEX FORMULA': 'FORMULA INDEKS NIKKEI',
       'DIGITAL GOLD ANALYSIS': 'ANALISIS EMAS DIGITAL',
       'HANGSENG INDEX ANALYSIS': 'ANALISIS INDEKS HANG SENG',
       'NIKKEI INDEX ANALYSIS': 'ANALISIS INDEKS NIKKEI',
       'NEST Calculator': 'Kalkulator NEST',
       'NEST transaction concept':
-        'Konsep transaksi yang menggunakan perbandingan harga pembukaan hari ini dengan harga penutupan sesi sebelumnya untuk menentukan bias arah transaksi.',
+        'Konsep transaksi NEST yang menggunakan perbandingan harga pembukaan hari ini dengan harga penutupan sesi sebelumnya untuk menentukan bias arah transaksi.',
       "Enter today's open": 'Masukkan harga pembukaan hari ini',
       Neutral: 'Netral',
       BUY: 'BELI',
@@ -459,7 +461,7 @@ export const translations: Record<Language, Translations> = {
       'Perhitungan Baru': 'New Calculation',
       'Konsep Transaksi': 'Transaction Concept',
       'Pivot transaction concept':
-        'A transaction concept for identifying objective price levels calculated from the previous period high, low, and close to determine support and resistance areas.',
+        'Pivot transaction concept for identifying objective price levels calculated from the previous period high, low, and close to determine support and resistance areas.',
       'Hitung →': 'Calculate →',
       'TITIK PIVOT': 'PIVOT POINT',
       'Emas Fisik': 'Physical Gold',
@@ -468,6 +470,7 @@ export const translations: Record<Language, Translations> = {
       BERANDA: 'HOME',
       EMAS: 'GOLD',
       PIVOT: 'PIVOT',
+      METHOD: 'METHOD',
       BERITA: 'NEWS',
       PEMBUKAAN: 'OPEN',
       TERTINGGI: 'HIGH',
@@ -544,11 +547,17 @@ export const translations: Record<Language, Translations> = {
       'Data Pasar': 'Market Data',
       'Open, High, Low, dan Close': 'Open, High, Low, and Close',
       'NEST transaction concept':
-        'A transaction concept that compares the current Open price with the previous Close price to determine directional bias.',
+        'NEST transaction concept that compares the current Open price with the previous Close price to determine directional bias.',
       'Konsep transaksi yang menggunakan perbandingan harga Open saat ini dengan harga Close sebelumnya untuk menentukan bias arah transaksi.':
         'A transaction concept that compares the current Open price with the previous Close price to determine directional bias.',
       'Konsep transaksi untuk mengetahui level harga objektif yang dihitung dari data harga tertinggi, terendah, dan penutupan periode sebelumnya untuk menentukan area support dan resistance.':
         'A transaction concept for identifying objective price levels calculated from the previous period high, low, and close to determine support and resistance areas.',
+      'DIGITAL GOLD FORMULA': 'DIGITAL GOLD FORMULA',
+      'HANG SENG INDEX FORMULA': 'HANG SENG INDEX FORMULA',
+      'HANGSENG INDEX FORMULA': 'HANG SENG INDEX FORMULA',
+      'NIKKEI INDEX FORMULA': 'NIKKEI INDEX FORMULA',
+      'FORMULA INDEKS HANG SENG': 'HANG SENG INDEX FORMULA',
+      'FORMULA INDEKS NIKKEI': 'NIKKEI INDEX FORMULA',
     },
   },
 }
