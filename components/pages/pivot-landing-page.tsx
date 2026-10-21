@@ -46,11 +46,24 @@ export function PivotLandingPage({ mode = 'pivot' }: { mode?: 'pivot' | 'nest' }
       <AppHeader />
 
       <main className="mx-auto w-full max-w-md px-4 py-6 sm:max-w-xl">
-        <div className="mb-6">
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-            {translate('Transaction Concept')}
-          </h1>
-          <p className="mt-1 text-sm leading-relaxed text-slate-500">{intro}</p>
+        {/* Transaction Concept Explanation Card with Concept Indicator */}
+        <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-[#0292e3]" />
+              <h1 className="text-base sm:text-lg font-extrabold tracking-tight text-slate-900">
+                {translate('Transaction Concept')}
+              </h1>
+            </div>
+            {/* Indikator Konsep Transaksi Sesuai Mode */}
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0292e3]/10 border border-[#0292e3]/20 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#0292e3]">
+              <span className="h-2 w-2 rounded-full bg-[#0292e3] animate-pulse" />
+              <span>{mode === 'pivot' ? translate('PIVOT') : 'NEST'}</span>
+            </div>
+          </div>
+          <p className="mt-3 text-xs sm:text-sm leading-relaxed text-slate-600">
+            {intro}
+          </p>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -108,7 +121,7 @@ export function PivotLandingPage({ mode = 'pivot' }: { mode?: 'pivot' | 'nest' }
         {[
           { href: '/', label: 'HOME', icon: Home },
           { href: '/gold', label: 'GOLD', icon: Banknote },
-          { href: '/pivot', label: 'PIVOT', icon: TrendingUp },
+          { href: '/pivot', label: 'METHOD', icon: TrendingUp },
           { href: '/news', label: 'NEWS', icon: Newspaper },
         ].map(({ href, label, icon: Icon }) => (
           <Link

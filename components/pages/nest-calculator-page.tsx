@@ -40,7 +40,7 @@ type ThemeConfig = {
 
 const THEMES: Record<string, ThemeConfig> = {
   gold: {
-    label: 'DIGITAL GOLD ANALYSIS',
+    label: 'DIGITAL GOLD FORMULA',
     shortLabel: 'Gold',
     color: '#e0b91b',
     lightColor: '#fff8d9',
@@ -49,7 +49,7 @@ const THEMES: Record<string, ThemeConfig> = {
   },
 
   hangseng: {
-    label: 'HANGSENG INDEX ANALYSIS',
+    label: 'HANG SENG INDEX FORMULA',
     shortLabel: 'Hangseng',
     color: '#d50045',
     lightColor: '#fff0f4',
@@ -58,7 +58,7 @@ const THEMES: Record<string, ThemeConfig> = {
   },
 
   nikkei: {
-    label: 'NIKKEI INDEX ANALYSIS',
+    label: 'NIKKEI INDEX FORMULA',
     shortLabel: 'Nikkei',
     color: '#079fd8',
     lightColor: '#eefaff',

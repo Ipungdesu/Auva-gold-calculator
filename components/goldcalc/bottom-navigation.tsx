@@ -17,7 +17,7 @@ export interface BottomNavigationProps {
 const items = [
   { href: '/', label: 'HOME', icon: Home, matchExact: true },
   { href: '/gold', label: 'GOLD', icon: Banknote, matchExact: false },
-  { href: '/pivot', label: 'PIVOT', icon: TrendingUp, matchExact: false },
+  { href: '/pivot', label: 'METHOD', icon: TrendingUp, matchExact: false },
   { href: '/news', label: 'NEWS', icon: Newspaper, matchExact: false },
 ]
 
