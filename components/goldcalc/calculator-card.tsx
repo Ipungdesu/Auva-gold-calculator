@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Calculator, Hourglass, TrendingUp, Trash2 } from 'lucide-react'
 import { formatRupiah, GOLD_TOZ, type GoldHistory } from '@/lib/goldcalc-data'
 import { useGoldHistory } from '@/components/providers/gold-history-provider'
@@ -46,9 +46,26 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
   } = useGoldHistory()
   const { capital, buyingPrice, sellingPrice, exchangeRate, result } = calculatorDraft
   const [showHistory, setShowHistory] = useState(false)
-  const capitalInputRef = useRef<HTMLInputElement>(null)
 
-  function calculate() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const calculateBtnRef = useRef<HTMLButtonElement>(null)
+  const capitalInputRef = useRef<HTMLInputElement>(null)
+  const lastCalculatedRef = useRef<{
+    capital: number
+    hbUsd: number
+    hjUsd: number
+    rate: number
+  } | null>(null)
+  const isCalculatingRef = useRef(false)
+
+  const executeCalculate = useCallback(() => {
+    // Rapid click burst throttling
+    if (isCalculatingRef.current) return
+    isCalculatingRef.current = true
+    setTimeout(() => {
+      isCalculatingRef.current = false
+    }, 250)
+
     const cap = parseFloat(capital) || 0
     const hbUsd = parseFloat(buyingPrice) || 0
     const hjUsd = parseFloat(sellingPrice) || 0
@@ -89,6 +106,41 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
 
     setCalculatorDraft((draft) => ({ ...draft, result: res }))
 
+    // Anti-spam duplicate check against last calculation and recent history
+    const last = lastCalculatedRef.current
+    const latestHistory = goldItems.length > 0 ? goldItems[0] : null
+
+    const isMatchLast =
+      last !== null &&
+      Math.abs(last.capital - cap) < 0.001 &&
+      Math.abs(last.hbUsd - hbUsd) < 0.001 &&
+      Math.abs(last.hjUsd - hjUsd) < 0.001 &&
+      Math.abs(last.rate - rate) < 0.001
+
+    const isMatchLatestHistory =
+      latestHistory !== null &&
+      Math.abs(latestHistory.capital - cap) < 0.001 &&
+      (latestHistory.buyingPriceUsd !== undefined
+        ? Math.abs(latestHistory.buyingPriceUsd - hbUsd) < 0.001
+        : Math.abs(latestHistory.buyingPrice - hb) < 0.01) &&
+      (latestHistory.sellingPriceUsd !== undefined
+        ? Math.abs(latestHistory.sellingPriceUsd - hjUsd) < 0.001
+        : Math.abs(latestHistory.sellingPrice - hj) < 0.01) &&
+      (latestHistory.exchangeRate ? Math.abs(latestHistory.exchangeRate - rate) < 0.001 : true)
+
+    if (isMatchLast || isMatchLatestHistory) {
+      // Prevent spamming calculation with identical column inputs
+      return
+    }
+
+    // Store calculated values to detect future duplicate attempts
+    lastCalculatedRef.current = {
+      capital: cap,
+      hbUsd,
+      hjUsd,
+      rate,
+    }
+
     addGold({
       id: crypto.randomUUID(),
       capital: cap,
@@ -102,7 +154,87 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
       profit: res.profit,
       date: new Date().toISOString(),
     })
-  }
+  }, [capital, buyingPrice, sellingPrice, exchangeRate, goldItems, addGold, setCalculatorDraft])
+
+  const executeCalculateRef = useRef(executeCalculate)
+  useEffect(() => {
+    executeCalculateRef.current = executeCalculate
+  }, [executeCalculate])
+
+  // Event listeners:
+  // 1. input: listens to any change in inputs across columns
+  // 2. keydown: listens to Enter key to calculate without spamming duplicates
+  // 3. click: listens to calculate button clicks
+  useEffect(() => {
+    const container = containerRef.current
+    const calcBtn = calculateBtnRef.current
+    if (!container) return
+
+    const handleInput = () => {
+      // Input event listener detects user typing in input fields
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        const target = e.target as HTMLElement | null
+        if (target && target.tagName === 'INPUT') {
+          e.preventDefault()
+          executeCalculateRef.current()
+        }
+      }
+    }
+
+    const handleButtonClick = (e: MouseEvent) => {
+      e.preventDefault()
+      executeCalculateRef.current()
+    }
+
+    container.addEventListener('input', handleInput)
+    container.addEventListener('keydown', handleKeyDown)
+    if (calcBtn) {
+      calcBtn.addEventListener('click', handleButtonClick)
+    }
+
+    return () => {
+      container.removeEventListener('input', handleInput)
+      container.removeEventListener('keydown', handleKeyDown)
+      if (calcBtn) {
+        calcBtn.removeEventListener('click', handleButtonClick)
+      }
+    }
+  }, [])
+
+  // Sync already calculated state on mount if current draft matches latest history
+  useEffect(() => {
+    if (result && goldItems.length > 0) {
+      const latest = goldItems[0]
+      const cap = parseFloat(capital) || 0
+      const hbUsd = parseFloat(buyingPrice) || 0
+      const hjUsd = parseFloat(sellingPrice) || 0
+      const rate = parseFloat(exchangeRate) || 0
+
+      const isSameCapital = Math.abs(latest.capital - cap) < 0.001
+      const isSameHb =
+        latest.buyingPriceUsd !== undefined
+          ? Math.abs(latest.buyingPriceUsd - hbUsd) < 0.001
+          : Math.abs(latest.buyingPrice - (hbUsd * rate) / GOLD_TOZ) < 0.01
+      const isSameHj =
+        latest.sellingPriceUsd !== undefined
+          ? Math.abs(latest.sellingPriceUsd - hjUsd) < 0.001
+          : Math.abs(latest.sellingPrice - (hjUsd * rate) / GOLD_TOZ) < 0.01
+      const isSameRate =
+        latest.exchangeRate ? Math.abs(latest.exchangeRate - rate) < 0.001 : true
+
+      if (isSameCapital && isSameHb && isSameHj && isSameRate) {
+        lastCalculatedRef.current = {
+          capital: cap,
+          hbUsd,
+          hjUsd,
+          rate,
+        }
+      }
+    }
+  }, [result, goldItems, capital, buyingPrice, sellingPrice, exchangeRate])
 
   function updateInput(
     field: 'buyingPrice' | 'sellingPrice' | 'exchangeRate',
@@ -151,6 +283,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
   }
 
   function handleReset() {
+    lastCalculatedRef.current = null
     setCalculatorDraft({
       capital: '',
       buyingPrice: '',
@@ -162,7 +295,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
   }
 
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div ref={containerRef} className="flex w-full flex-col gap-5">
       {/* ========================================================= */}
       {/* CALCULATOR FORM CARD */}
       {/* ========================================================= */}
@@ -255,7 +388,8 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
           {/* Actions */}
           <div className="mt-1 grid grid-cols-[1fr_auto] gap-3">
             <button
-              onClick={calculate}
+              ref={calculateBtnRef}
+              type="button"
               className="flex h-[42px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#291F6C] to-[#00A9E8] text-sm font-semibold text-white shadow-md shadow-[#291F6C]/10 transition hover:opacity-95 active:scale-[0.99]"
             >
               <Calculator className="h-4 w-4" />
@@ -263,6 +397,7 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
             </button>
 
             <button
+              type="button"
               onClick={handleReset}
               className="h-[42px] rounded-xl border border-slate-200 bg-white px-5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
             >
@@ -494,6 +629,17 @@ export function CalculatorCard({ addGold, goldItems }: CalculatorCardProps) {
                     type="button"
                     onClick={() => {
                       loadGoldCalculation(item)
+                      const rate = item.exchangeRate || 1
+                      const hbUsd =
+                        item.buyingPriceUsd ?? (item.buyingPrice * GOLD_TOZ) / rate
+                      const hjUsd =
+                        item.sellingPriceUsd ?? (item.sellingPrice * GOLD_TOZ) / rate
+                      lastCalculatedRef.current = {
+                        capital: item.capital,
+                        hbUsd,
+                        hjUsd,
+                        rate,
+                      }
                       setShowHistory(false)
                     }}
                     className="rounded-lg bg-[#0292e3] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#027dc2]"

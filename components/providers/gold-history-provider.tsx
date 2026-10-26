@@ -122,7 +122,22 @@ export function GoldHistoryProvider({ children }: { children: ReactNode }) {
   }, [calculatorDraft, isHydrated])
 
   const addGold = useCallback((x: GoldHistory) => {
-    setGoldItems((items) => [x, ...items])
+    setGoldItems((items) => {
+      if (items.length > 0) {
+        const latest = items[0]
+        const isSameCapital = Math.abs(latest.capital - x.capital) < 0.001
+        const isSameHb = Math.abs(latest.buyingPrice - x.buyingPrice) < 0.01
+        const isSameHj = Math.abs(latest.sellingPrice - x.sellingPrice) < 0.01
+        const isSameRate =
+          latest.exchangeRate && x.exchangeRate
+            ? Math.abs(latest.exchangeRate - x.exchangeRate) < 0.001
+            : true
+        if (isSameCapital && isSameHb && isSameHj && isSameRate) {
+          return items
+        }
+      }
+      return [x, ...items]
+    })
   }, [])
 
   const loadGoldCalculation = useCallback((item: GoldHistory) => {
@@ -137,13 +152,31 @@ export function GoldHistoryProvider({ children }: { children: ReactNode }) {
     const sellingPrice =
       item.sellingPriceUsd ?? (item.sellingPrice * GOLD_TOZ) / exchangeRate
 
+    const hb = item.buyingPrice
+    const hj = item.sellingPrice
+    const qty = hb > 0 ? item.capital / hb : 0
+    const totalBuy = qty * hb
+    const totalSell = qty * hj
+    const spread = hj - hb
+    const profit = item.profit
+    const profitPct = totalBuy > 0 ? (profit / totalBuy) * 100 : 0
+
+    const res: GoldCalculatorResult = {
+      quantityGrams: Number(qty.toFixed(2)),
+      totalBuyingPrice: Math.round(totalBuy),
+      totalSellingPrice: Math.round(totalSell),
+      spreadPerGram: Math.round(spread),
+      profit: Math.round(profit),
+      profitPercent: Number(profitPct.toFixed(2)),
+    }
+
     setCalculatorDraft({
       capital: String(item.capital),
       buyingPrice: String(buyingPrice),
       sellingPrice: String(sellingPrice),
       exchangeRate: String(exchangeRate),
       toz: String(GOLD_TOZ),
-      result: null,
+      result: res,
     })
   }, [])
 
