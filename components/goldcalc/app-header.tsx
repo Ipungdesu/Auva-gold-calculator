@@ -34,20 +34,12 @@ export function AppHeader({ backHref, rightElement, className = '' }: AppHeaderP
             </Link>
           )}
 
-          {/* Brand Logo — nest style: icon in bordered circle + navy text */}
+          {/* Brand Logo */}
           <Link
             href="/"
             className="flex items-center gap-2 transition-opacity hover:opacity-90 shrink-0"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-blue-200 bg-white shadow-sm">
-              <svg
-                className="h-5 w-5 text-[#0292e3]"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 2L2 22h5.5l2.5-5h8l2.5 5H22L12 2zm0 6.5L14.7 14H9.3L12 8.5z" />
-              </svg>
-            </div>
+            <img src="/logo.png" alt="" className="h-9 w-9 object-contain" />
             <span className="text-xl font-extrabold tracking-tight text-[#14509b]">AUVA</span>
           </Link>
         </div>
