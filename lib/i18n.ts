@@ -99,6 +99,11 @@ export const translations: Record<Language, Translations> = {
       'EXCHANGE RATE': 'KURS',
       TOZ: 'TOZ',
       Calculate: 'Hitung',
+      Calculated: 'Sudah Dihitung',
+      'Calculation saved to history. Modify any field to recalculate.':
+        'Perhitungan tersimpan di riwayat. Ubah kolom input untuk menghitung kembali.',
+      'This calculation already exists in history. Change inputs to calculate again.':
+        'Perhitungan dengan data ini sudah ada di riwayat kalkulasi. Ubah kolom input untuk menghitung kembali.',
       Reset: 'Atur Ulang',
       'GOLD QUANTITY': 'JUMLAH EMAS',
       grams: 'gram',
@@ -380,6 +385,16 @@ export const translations: Record<Language, Translations> = {
       'HARGA JUAL (HJ)': 'SELLING PRICE (HJ)',
       KURS: 'EXCHANGE RATE',
       Hitung: 'Calculate',
+      'Sudah Dihitung': 'Calculated',
+      Calculated: 'Calculated',
+      'Perhitungan tersimpan di riwayat. Ubah kolom input untuk menghitung kembali.':
+        'Calculation saved to history. Modify any field to recalculate.',
+      'Perhitungan dengan data ini sudah ada di riwayat kalkulasi. Ubah kolom input untuk menghitung kembali.':
+        'This calculation already exists in history. Change inputs to calculate again.',
+      'Calculation saved to history. Modify any field to recalculate.':
+        'Calculation saved to history. Modify any field to recalculate.',
+      'This calculation already exists in history. Change inputs to calculate again.':
+        'This calculation already exists in history. Change inputs to calculate again.',
       'Atur Ulang': 'Reset',
       'JUMLAH EMAS': 'GOLD QUANTITY',
       gram: 'grams',
