@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     title: 'AUVA APP',
   },
   icons: {
-    icon: '/logo.svg',
-    apple: '/pwa-icon-192.png',
+    icon: '/logo.png',
+    apple: '/apple-icon.png',
   },
 }
 

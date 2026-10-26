@@ -33,7 +33,7 @@ export function SplashScreen({ onComplete }) {
       <main className="splash-content">
         <div className="splash-logo">
           <span className="splash-logo__orbit" aria-hidden="true" />
-          <img src="/logo.svg" alt="" width="96" height="96" />
+          <img src="/logo.png" alt="" width="96" height="96" />
           <span className="splash-logo__shimmer" aria-hidden="true" />
         </div>
 
