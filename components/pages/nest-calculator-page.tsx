@@ -15,6 +15,7 @@ import { AppHeader } from '@/components/goldcalc/app-header'
 import { BottomNavigation } from '@/components/goldcalc/bottom-navigation'
 import type { OhlcRow } from '@/components/pivot/PivotCalculator'
 import { useTranslation } from '@/lib/LanguageContext'
+import { formatPriceInput, normalizePriceInput } from '@/lib/price-input'
 
 interface NestCalculatorPageProps {
   symbol: string
@@ -348,14 +349,8 @@ export default function NestCalculatorPage({
               id="nest-open-today"
               type="text"
               inputMode="decimal"
-              value={openToday}
-              onChange={(e) => {
-                const value = e.target.value
-
-                if (/^\d*\.?\d*$/.test(value)) {
-                  setOpenToday(value)
-                }
-              }}
+              value={formatPriceInput(openToday, true)}
+              onChange={(e) => setOpenToday(normalizePriceInput(e.target.value))}
               placeholder={translate("Enter today's open")}
               className="mt-1 w-full bg-transparent text-base font-extrabold text-[#1e1b4b] outline-none placeholder:text-slate-300"
             />
