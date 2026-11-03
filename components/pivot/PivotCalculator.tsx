@@ -9,14 +9,12 @@ import {
   SlidersHorizontal,
   CalendarDays,
   Share2,
-  Home,
-  Banknote,
   TrendingUp,
-  Newspaper,
 } from 'lucide-react'
 import { calculatePivotLevels, determineSignal } from '@/lib/calculate-pivot'
 import type { InstrumentConfig } from '@/lib/instrument-config'
 import { AppHeader } from '@/components/goldcalc/app-header'
+import { BottomNavigation } from '@/components/goldcalc/bottom-navigation'
 import { useTranslation } from '@/lib/LanguageContext'
 import { useOnlineStatus } from '@/components/pwa/offline-support'
 
@@ -793,37 +791,7 @@ export function PivotCalculator({ initialData, config }: PivotCalculatorProps) {
         </button>
       </main>
 
-      {/* ── Bottom Navigation ── */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-slate-200 bg-white/95 px-2 backdrop-blur-md">
-        <Link
-          href="/"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400 hover:text-slate-600"
-        >
-          <Home className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">{translate('HOME')}</span>
-        </Link>
-        <Link
-          href="/gold"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400 hover:text-slate-600"
-        >
-          <Banknote className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">{translate('GOLD')}</span>
-        </Link>
-        <Link
-          href="/pivot"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-[#0292e3]"
-        >
-          <TrendingUp className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">{translate('PIVOT')}</span>
-        </Link>
-        <Link
-          href="/news"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400 hover:text-slate-600"
-        >
-          <Newspaper className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">{translate('NEWS')}</span>
-        </Link>
-      </nav>
+      <BottomNavigation />
     </div>
   )
 }
