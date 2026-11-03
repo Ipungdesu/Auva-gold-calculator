@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { Home, Banknote, TrendingUp, Newspaper } from 'lucide-react'
+import { TrendingUp } from 'lucide-react'
 import { INSTRUMENTS } from '@/lib/instrument-config'
 import { AppHeader } from '@/components/goldcalc/app-header'
+import { BottomNavigation } from '@/components/goldcalc/bottom-navigation'
 import { useTranslation } from '@/lib/LanguageContext'
 
 const icons: Record<string, React.ReactNode> = {
@@ -117,25 +118,7 @@ export function PivotLandingPage({ mode = 'pivot' }: { mode?: 'pivot' | 'nest' }
         </div>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-slate-200 bg-white/95 px-2 backdrop-blur-md">
-        {[
-          { href: '/', label: 'HOME', icon: Home },
-          { href: '/gold', label: 'GOLD', icon: Banknote },
-          { href: '/pivot', label: 'METHOD', icon: TrendingUp },
-          { href: '/news', label: 'NEWS', icon: Newspaper },
-        ].map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`flex flex-1 flex-col items-center justify-center gap-1 py-1 ${
-              href === '/pivot' ? 'text-[#0292e3]' : 'text-slate-400 hover:text-slate-600'
-            }`}
-          >
-            <Icon className="h-5 w-5" />
-            <span className="text-[11px] font-bold tracking-wider">{translate(label)}</span>
-          </Link>
-        ))}
-      </nav>
+      <BottomNavigation />
     </div>
   )
 }

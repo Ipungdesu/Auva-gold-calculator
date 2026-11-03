@@ -4,10 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowLeft,
-  Home,
-  Banknote,
   TrendingUp,
-  Newspaper,
   SlidersHorizontal,
   Smartphone,
   History,
@@ -15,6 +12,7 @@ import {
   CalendarDays,
 } from 'lucide-react'
 import { AppHeader } from '@/components/goldcalc/app-header'
+import { BottomNavigation } from '@/components/goldcalc/bottom-navigation'
 import type { OhlcRow } from '@/components/pivot/PivotCalculator'
 import { useTranslation } from '@/lib/LanguageContext'
 
@@ -608,51 +606,7 @@ export default function NestCalculatorPage({
         </button>
       </main>
 
-      {/* =====================================================
-          BOTTOM NAV
-      ===================================================== */}
-
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-slate-200 bg-white/95 px-2 backdrop-blur-md">
-        <Link
-          href="/"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400"
-        >
-          <Home className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">
-            {translate('HOME')}
-          </span>
-        </Link>
-
-        <Link
-          href="/gold"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400"
-        >
-          <Banknote className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">
-            {translate('GOLD')}
-          </span>
-        </Link>
-
-        <Link
-          href="/pivot"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-[#0292e3]"
-        >
-          <TrendingUp className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">
-            {translate('PIVOT')}
-          </span>
-        </Link>
-
-        <Link
-          href="/news"
-          className="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-slate-400"
-        >
-          <Newspaper className="h-5 w-5" />
-          <span className="text-[11px] font-bold tracking-wider">
-            {translate('NEWS')}
-          </span>
-        </Link>
-      </nav>
+      <BottomNavigation />
     </div>
   )
 }
